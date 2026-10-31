@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Photo 3 - Smart Tech R6</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>Smart Tech R6</h2>
+    <p>AI Photo Editing & Prompt Gallery</p>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="tools.html">Tools</a>
+    <a href="prompts.html">Prompts</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+</nav>
+
+<main>
+    <a href="index.html">← Back to Home</a>
+
+    <h1>AI Photo 3</h1>
+
+    <img class="detail-photo" src="images/photo3.jpg" alt="AI Photo 3">
+
+    <h2>Photo Prompt</h2>
+
+    <div class="prompt-box" id="photoPrompt">
+A cinematic ultra-realistic portrait with natural skin texture, stylish appearance, professional photography, beautiful lighting and highly detailed 8K quality.
+    </div>
+
+    <button onclick="navigator.clipboard.writeText(document.getElementById('photoPrompt').innerText)">
+        Copy Prompt
+    </button>
+</main>
+
+</body>
+</html>

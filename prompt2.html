@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Photo 2 Prompt - Smart Tech R6</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>Smart Tech R6</h2>
+    <p>AI Photo Editing & Prompt Gallery</p>
+</header>
+
+<main>
+    <a href="index.html">← Back to Home</a>
+
+    <h1>AI Photo 2</h1>
+
+    <img class="detail-photo"
+         src="images/photo2.jpg"
+         alt="AI Photo 2">
+
+    <h2>Photo Prompt</h2>
+
+    <div class="prompt-box" id="photoPrompt">
+A professional ultra-realistic portrait of a young Indian man, stylish hairstyle, natural skin texture, cinematic lighting, detailed face and 8K photography quality.
+    </div>
+
+    <button onclick="navigator.clipboard.writeText(document.getElementById('photoPrompt').innerText)">
+        Copy Prompt
+    </button>
+</main>
+
+</body>
+</html>

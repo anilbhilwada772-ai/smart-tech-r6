@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompts - Smart Tech R6</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h2>Smart Tech R6</h2>
+    <p>AI Photo Editing & Prompt Gallery</p>
+</header>
+<nav>
+    <a href="index.html">Home</a>
+    <a href="tools.html">Tools</a>
+    <a href="prompts.html">Prompts</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+</nav>
+<main>
+    <a href="index.html">← Back to Home</a>
+
+    <h1>AI Photo Prompts</h1>
+    <input
+    type="text"
+    id="promptSearch"
+    placeholder="Search AI Photos..."
+    onkeyup="searchPrompts()"
+    style="width:100%; padding:14px; margin:15px 0; border:1px solid #ccc; border-radius:10px; font-size:16px;"
+>
+    <p>Explore creative prompts for AI photo editing.</p>
+
+    <div class="prompt-box">
+        <h2>Trending AI Portrait</h2>
+        <p>Professional AI portrait editing prompt.</p>
+        <a href="prompt1.html">View Prompt →</a>
+    </div>
+<div class="prompt-box">
+    <h2>AI Photo 2</h2>
+    <p>Creative AI photo editing prompt.</p>
+    <a href="prompt2.html">View Prompt →</a>
+</div>
+<div class="prompt-box">
+    <h2>AI Photo 3</h2>
+    <p>Creative AI photo editing prompt.</p>
+    <a href="prompt3.html">View Prompt →</a>
+</div>
+</main>
+<script>
+function searchPrompts() {
+    let input = document.getElementById("promptSearch").value.toLowerCase();
+    let cards = document.querySelectorAll(".prompt-box");
+
+    cards.forEach(function(card) {
+        let text = card.innerText.toLowerCase();
+        card.style.display = text.includes(input) ? "" : "none";
+    });
+}
+</script>
+<button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+style="position:fixed; bottom:85px; right:20px; padding:12px 16px; background:#1769e0; color:white; border:none; border-radius:50px; cursor:pointer; z-index:999;">
+↑ Top
+</button>
+</body>
+</html>
