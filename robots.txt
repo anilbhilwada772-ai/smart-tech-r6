@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://anilbhilwada772-ai.github.io/smart-tech-r6/sitemap.xml
