@@ -32,7 +32,7 @@
       padding: 12px 22px;
       border-radius: 8px;
       cursor: pointer;
-      margin-top: 12px;
+      margin: 12px 8px 0 0;
     }
   </style>
 </head>
@@ -44,6 +44,7 @@
     <h2>AI Photo Prompt</h2>
     <div class="prompt-box" id="photoPrompt"></div>
     <button class="copy-button" id="copyButton">Copy Prompt</button>
+    <button class="copy-button" id="shareButton">Share Prompt</button>
     <p id="message"></p>
   </main>
 
@@ -56,6 +57,7 @@
     const prompt = document.getElementById('photoPrompt');
     const message = document.getElementById('message');
     const copyButton = document.getElementById('copyButton');
+    const shareButton = document.getElementById('shareButton');
 
     if (!id) {
       title.textContent = 'Photo not found';
@@ -80,6 +82,31 @@
             message.textContent = 'Prompt copied successfully!';
           } catch {
             message.textContent = 'Copy failed. Please select and copy the prompt.';
+          }
+        });
+
+        shareButton.addEventListener('click', async () => {
+          const shareData = {
+            title: data.title,
+            text: data.prompt,
+            url: window.location.href
+          };
+
+          if (navigator.share) {
+            try {
+              await navigator.share(shareData);
+            } catch (error) {
+              console.log('Share cancelled');
+            }
+          } else {
+            try {
+              await navigator.clipboard.writeText(
+                data.prompt + '\n' + window.location.href
+              );
+              message.textContent = 'Prompt and link copied!';
+            } catch {
+              message.textContent = 'Unable to share. Please copy manually.';
+            }
           }
         });
       }
