@@ -22,22 +22,76 @@
 </head>
 <body>
   <main class="blog-container">
+
     <a href="index.html">← Back to Home</a>
-    <h1>Smart Tech R6 Blog</h1>
-    <p>Latest AI Editing Tutorials, Tips and Trends</p>
+
+    <h1>AI Photo & Video Editing Blog – Smart Tech R6</h1>
+
+    <p>
+        Explore the latest AI photo editing tutorials, AI video editing
+        guides, useful AI tools, creative prompts and technology tips.
+        Learn how to create amazing AI images and videos with easy
+        step-by-step tutorials in Hindi and English.
+    </p>
+
+    <section>
+        <h2>Latest AI Editing Tutorials and Tips</h2>
+        <p>
+            Discover helpful guides about AI photo editing, trending
+            AI video effects, image generation, photo enhancement and
+            the latest AI editing tools. Our tutorials help beginners
+            learn AI editing techniques and create better photos and videos.
+        </p>
+    </section>
+
     <div class="blog-controls">
-      <input id="blogSearch" type="search" placeholder="Search blogs by title..." aria-label="Search blogs">
-      <select id="categoryFilter" aria-label="Filter blogs by category">
-        <option value="All">All Categories</option>
-        <option value="AI Photo Editing">AI Photo Editing</option>
-        <option value="AI Video Editing">AI Video Editing</option>
-        <option value="AI Tools">AI Tools</option>
-        <option value="Tutorials">Tutorials</option>
-        <option value="Other">Other</option>
-      </select>
+
+        <input
+            id="blogSearch"
+            type="search"
+            placeholder="Search blogs by title..."
+            aria-label="Search blogs"
+        >
+
+        <select id="categoryFilter" aria-label="Filter blogs by category">
+            <option value="All">All Categories</option>
+            <option value="AI Photo Editing">AI Photo Editing</option>
+            <option value="AI Video Editing">AI Video Editing</option>
+            <option value="AI Tools">AI Tools</option>
+            <option value="Tutorials">Tutorials</option>
+            <option value="Other">Other</option>
+        </select>
+
     </div>
+
     <div class="blog-grid" id="blogList">Loading Blogs...</div>
-  </main>
+
+    <section>
+        <h2>What You Will Learn</h2>
+
+        <ul>
+            <li>AI Photo Editing Tips and Prompts</li>
+            <li>Trending AI Video Editing Tutorials</li>
+            <li>Useful AI Tools for Content Creators</li>
+            <li>Step-by-Step AI Image and Video Guides</li>
+            <li>Latest AI Editing Trends and Ideas</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Explore More on Smart Tech R6</h2>
+        <p>
+            <a href="prompts.html">Explore AI Photo Editing Prompts</a>
+        </p>
+        <p>
+            <a href="tools.html">Discover AI Tools</a>
+        </p>
+        <p>
+            <a href="index.html">Visit Smart Tech R6 Homepage</a>
+        </p>
+    </section>
+
+</main>
   <script type="module">
     import { supabase } from './supabase.js';
     const blogList = document.getElementById('blogList');
