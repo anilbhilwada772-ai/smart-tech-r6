@@ -49,6 +49,13 @@
 
         
 <!-- Dynamic Photo Gallery -->
+ <div class="search-container">
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search AI Photos..."
+    >
+</div>
  <div class="category-filter">
     <button class="category-btn" data-category="All">All</button>
     <button class="category-btn" data-category="AI Photo Editing">AI Photo Editing</button>
@@ -96,7 +103,9 @@
 
 </section>
 
-
+<div class="load-more-container">
+    <button id="loadMoreBtn">Load More Photos</button>
+</div>
     </main>
 
 <footer class="site-footer">
@@ -105,5 +114,6 @@
     <p>© 2026 Smart Tech R6. All Rights Reserved.</p>
 </footer>
 <script type="module" src="show-prompts.js"></script>
+<script type="module" src="featured.js"></script>
 </body>
 </html>

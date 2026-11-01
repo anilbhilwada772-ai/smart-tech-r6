@@ -349,4 +349,389 @@
     });
   </script>
 </body>
+</html> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Smart Tech R6</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; background: #f2f6ff; margin: 0; padding: 20px; color: #172033; }
+    .dashboard { max-width: 900px; margin: 20px auto; background: white; padding: 22px; border-radius: 15px; box-shadow: 0 4px 15px #0001; }
+    input, textarea, select, button { width: 100%; padding: 13px; margin: 8px 0; border-radius: 8px; border: 1px solid #ccc; font-size: 15px; }
+    button { background: #1769e0; color: white; border: 0; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: wait; }
+    .delete-btn { background: #d93025; }
+    .cancel-btn { background: #687386; }
+    .item { border: 1px solid #ddd; padding: 15px; border-radius: 12px; margin: 15px 0; }
+    .item img { width: 100%; max-height: 230px; object-fit: contain; border-radius: 8px; background: #f4f4f4; }
+    #message { overflow-wrap: anywhere; }
+    .muted { color: #687386; font-size: 14px; }
+    hr { margin: 30px 0; border: 0; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <main class="dashboard">
+    <h1>Smart Tech R6</h1>
+    <h2>Admin Dashboard</h2>
+
+    <h3>Upload New AI Photo</h3>
+    <form id="uploadForm">
+      <input id="title" type="text" placeholder="Photo Title" required>
+      <select id="category" required>
+        <option value="">Select Photo Category</option>
+        <option value="AI Photo Editing">AI Photo Editing</option>
+        <option value="Couple Photos">Couple Photos</option>
+        <option value="Boy Portrait">Boy Portrait</option>
+        <option value="Girl Portrait">Girl Portrait</option>
+        <option value="Festival Editing">Festival Editing</option>
+        <option value="Trending AI Prompts">Trending AI Prompts</option>
+        <option value="Other">Other</option>
+      </select>
+      <input id="photo" type="file" accept="image/jpeg,image/png,image/webp" required>
+      <textarea id="prompt" placeholder="Write AI Photo Prompt" rows="7" required></textarea>
+      <button type="submit">Upload Photo & Prompt</button>
+    </form>
+
+    <p id="message" role="status"></p>
+    <hr>
+    <h2>Manage Uploaded Photos</h2>
+    <button id="refreshButton" type="button">Refresh Photos</button>
+    <div id="photoList">Loading photos...</div>
+
+    <hr>
+    <h2>Publish New Blog</h2>
+    <form id="blogForm">
+      <input id="blogTitle" type="text" placeholder="Blog Title" required>
+      <input id="blogDescription" type="text" placeholder="Short Blog Description">
+      <select id="blogCategory" required>
+        <option value="Other">Select Blog Category</option>
+        <option value="AI Photo Editing">AI Photo Editing</option>
+        <option value="AI Video Editing">AI Video Editing</option>
+        <option value="AI Tools">AI Tools</option>
+        <option value="Tutorials">Tutorials</option>
+        <option value="Other">Other</option>
+      </select>
+      <input id="blogImage" type="file" accept="image/jpeg,image/png,image/webp">
+      <textarea id="blogContent" placeholder="Write full blog article here..." rows="10" required></textarea>
+      <button type="submit">Publish Blog</button>
+    </form>
+
+    <h2>Manage Published Blogs</h2>
+    <button id="refreshBlogsButton" type="button">Refresh Blogs</button>
+    <div id="blogList">Loading blogs...</div>
+
+    <button id="logoutButton" type="button" class="cancel-btn">Logout</button>
+  </main>
+
+  <script type="module">
+    import { supabase } from './supabase.js';
+
+    const message = document.getElementById('message');
+    const form = document.getElementById('uploadForm');
+    const photoList = document.getElementById('photoList');
+    const blogForm = document.getElementById('blogForm');
+    const blogList = document.getElementById('blogList');
+
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      window.location.replace('admin.html');
+    } else {
+      await loadPhotos();
+      await loadBlogs();
+    }
+
+    function validImage(file) {
+      return ['image/jpeg', 'image/png', 'image/webp'].includes(file.type) &&
+        file.size <= 5 * 1024 * 1024;
+    }
+
+    async function uploadImage(file) {
+      if (!validImage(file)) throw new Error('Image must be JPG, PNG or WEBP and smaller than 5 MB.');
+      const filePath = crypto.randomUUID() + '-' + file.name;
+      const { error } = await supabase.storage.from('ai-photos').upload(filePath, file);
+      if (error) throw error;
+      const { data } = supabase.storage.from('ai-photos').getPublicUrl(filePath);
+      return data.publicUrl;
+    }
+
+    async function removeStoredImage(imageUrl) {
+      if (!imageUrl) return;
+      const marker = '/storage/v1/object/public/ai-photos/';
+      const url = new URL(imageUrl);
+      const position = url.pathname.indexOf(marker);
+      if (position === -1) return;
+      const path = decodeURIComponent(url.pathname.substring(position + marker.length));
+      const { error } = await supabase.storage.from('ai-photos').remove([path]);
+      if (error) console.warn('Image cleanup failed:', error.message);
+    }
+
+    // PHOTO UPLOAD
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const title = document.getElementById('title').value.trim();
+      const category = document.getElementById('category').value;
+      const prompt = document.getElementById('prompt').value.trim();
+      const file = document.getElementById('photo').files[0];
+      if (!file) return;
+
+      try {
+        message.textContent = 'Uploading photo...';
+        const imageUrl = await uploadImage(file);
+        const { error } = await supabase.from('ai_prompts').insert([{ title, category, image_url: imageUrl, prompt }]);
+        if (error) throw error;
+        message.textContent = 'Photo and prompt uploaded successfully!';
+        form.reset();
+        await loadPhotos();
+      } catch (error) {
+        message.textContent = 'Photo upload failed: ' + error.message;
+      }
+    });
+
+    async function loadPhotos() {
+      photoList.textContent = 'Loading photos...';
+      const { data, error } = await supabase.from('ai_prompts').select('*').order('created_at', { ascending: false });
+      if (error) { photoList.textContent = 'Error: ' + error.message; return; }
+      photoList.innerHTML = '';
+      if (!data || data.length === 0) { photoList.textContent = 'No photos uploaded yet.'; return; }
+
+      data.forEach((item) => {
+        const card = document.createElement('section');
+        card.className = 'item';
+        const img = document.createElement('img');
+        img.src = item.image_url;
+        img.alt = item.title;
+        const heading = document.createElement('h3');
+        heading.textContent = item.title;
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit Photo & Prompt';
+        const featuredButton = document.createElement('button');
+        featuredButton.textContent = item.is_featured ? '★ Remove Featured' : '☆ Make Featured';
+        featuredButton.style.background = item.is_featured ? '#16834a' : '#6b7280';
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete Photo';
+        deleteButton.className = 'delete-btn';
+        card.append(img, heading, featuredButton, editButton, deleteButton);
+
+        featuredButton.addEventListener('click', async () => {
+          featuredButton.disabled = true;
+          const nextValue = !item.is_featured;
+          const { error } = await supabase.from('ai_prompts')
+            .update({ is_featured: nextValue }).eq('id', item.id);
+          if (error) {
+            message.textContent = 'Featured update failed: ' + error.message;
+            featuredButton.disabled = false;
+            return;
+          }
+          message.textContent = nextValue ? 'Photo marked as Featured!' : 'Photo removed from Featured.';
+          await loadPhotos();
+        });
+        photoList.appendChild(card);
+
+        editButton.addEventListener('click', () => showEditForm(card, item));
+        deleteButton.addEventListener('click', async () => {
+          if (!confirm('Are you sure you want to delete this photo and prompt?')) return;
+          deleteButton.disabled = true;
+          message.textContent = 'Deleting photo...';
+          const { error } = await supabase.from('ai_prompts').delete().eq('id', item.id);
+          if (error) { message.textContent = 'Delete failed: ' + error.message; deleteButton.disabled = false; return; }
+          await removeStoredImage(item.image_url);
+          message.textContent = 'Photo and prompt deleted successfully!';
+          await loadPhotos();
+        });
+      });
+    }
+
+    function showEditForm(card, item) {
+      card.innerHTML = '';
+      const heading = document.createElement('h3');
+      heading.textContent = 'Edit Photo & Prompt';
+      const titleInput = document.createElement('input');
+      titleInput.value = item.title;
+      titleInput.placeholder = 'Photo Title';
+      const promptInput = document.createElement('textarea');
+      promptInput.value = item.prompt;
+      promptInput.rows = 7;
+      promptInput.placeholder = 'Write AI Photo Prompt';
+      const imageInput = document.createElement('input');
+      imageInput.type = 'file';
+      imageInput.accept = 'image/jpeg,image/png,image/webp';
+      const saveButton = document.createElement('button');
+      saveButton.textContent = 'Save Changes';
+      const cancelButton = document.createElement('button');
+      cancelButton.textContent = 'Cancel';
+      cancelButton.className = 'cancel-btn';
+      card.append(heading, titleInput, promptInput, imageInput, saveButton, cancelButton);
+      cancelButton.addEventListener('click', loadPhotos);
+
+      saveButton.addEventListener('click', async () => {
+        const title = titleInput.value.trim();
+        const prompt = promptInput.value.trim();
+        const file = imageInput.files[0];
+        if (!title || !prompt) { message.textContent = 'Title and prompt are required.'; return; }
+        saveButton.disabled = true;
+        try {
+          message.textContent = 'Saving photo changes...';
+          let imageUrl = item.image_url;
+          if (file) imageUrl = await uploadImage(file);
+          const { error } = await supabase.from('ai_prompts').update({ title, prompt, image_url: imageUrl }).eq('id', item.id);
+          if (error) throw error;
+          if (file) await removeStoredImage(item.image_url);
+          message.textContent = 'Photo and prompt updated successfully!';
+          await loadPhotos();
+        } catch (error) {
+          message.textContent = 'Update failed: ' + error.message;
+          saveButton.disabled = false;
+        }
+      });
+    }
+
+    // BLOG PUBLISH
+    blogForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const title = document.getElementById('blogTitle').value.trim();
+      const description = document.getElementById('blogDescription').value.trim();
+      const content = document.getElementById('blogContent').value.trim();
+      const category = document.getElementById('blogCategory').value;
+      const file = document.getElementById('blogImage').files[0];
+
+      try {
+        message.textContent = 'Publishing blog...';
+        let imageUrl = null;
+        if (file) imageUrl = await uploadImage(file);
+        const { error } = await supabase.from('blog_posts').insert([{ title, description, content, category, image_url: imageUrl }]);
+        if (error) throw error;
+        message.textContent = 'Blog published successfully!';
+        blogForm.reset();
+        await loadBlogs();
+      } catch (error) {
+        message.textContent = 'Blog publish failed: ' + error.message;
+      }
+    });
+
+    async function loadBlogs() {
+      blogList.textContent = 'Loading blogs...';
+      const { data, error } = await supabase.from('blog_posts').select('*').order('created_at', { ascending: false });
+      if (error) { blogList.textContent = 'Blog error: ' + error.message; return; }
+      blogList.innerHTML = '';
+      if (!data || data.length === 0) { blogList.textContent = 'No blogs published yet.'; return; }
+
+      data.forEach((item) => {
+        const card = document.createElement('section');
+        card.className = 'item';
+        if (item.image_url) {
+          const img = document.createElement('img');
+          img.src = item.image_url;
+          img.alt = item.title;
+          card.appendChild(img);
+        }
+        const heading = document.createElement('h3');
+        heading.textContent = item.title;
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit Blog';
+        const featuredButton = document.createElement('button');
+        featuredButton.textContent = item.is_featured ? '★ Remove Trending' : '☆ Make Trending';
+        featuredButton.style.background = item.is_featured ? '#16834a' : '#6b7280';
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete Blog';
+        deleteButton.className = 'delete-btn';
+        card.append(heading, featuredButton, editButton, deleteButton);
+
+        featuredButton.addEventListener('click', async () => {
+          featuredButton.disabled = true;
+          const nextValue = !item.is_featured;
+          const { error } = await supabase.from('blog_posts')
+            .update({ is_featured: nextValue }).eq('id', item.id);
+          if (error) {
+            message.textContent = 'Trending update failed: ' + error.message;
+            featuredButton.disabled = false;
+            return;
+          }
+          message.textContent = nextValue ? 'Blog marked as Trending!' : 'Blog removed from Trending.';
+          await loadBlogs();
+        });
+        blogList.appendChild(card);
+
+        editButton.addEventListener('click', () => showBlogEditForm(card, item));
+        deleteButton.addEventListener('click', async () => {
+          if (!confirm('Are you sure you want to delete this blog?')) return;
+          deleteButton.disabled = true;
+          message.textContent = 'Deleting blog...';
+          const { error } = await supabase.from('blog_posts').delete().eq('id', item.id);
+          if (error) { message.textContent = 'Blog delete failed: ' + error.message; deleteButton.disabled = false; return; }
+          await removeStoredImage(item.image_url);
+          message.textContent = 'Blog deleted successfully!';
+          await loadBlogs();
+        });
+      });
+    }
+
+    function showBlogEditForm(card, item) {
+      card.innerHTML = '';
+      const heading = document.createElement('h3');
+      heading.textContent = 'Edit Blog';
+      const titleInput = document.createElement('input');
+      titleInput.value = item.title;
+      titleInput.placeholder = 'Blog Title';
+      const descriptionInput = document.createElement('input');
+      descriptionInput.value = item.description || '';
+      descriptionInput.placeholder = 'Short Blog Description';
+      const categoryInput = document.createElement('select');
+      ['AI Photo Editing', 'AI Video Editing', 'AI Tools', 'Tutorials', 'Other'].forEach((value) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        categoryInput.appendChild(option);
+      });
+      categoryInput.value = item.category || 'Other';
+      const contentInput = document.createElement('textarea');
+      contentInput.value = item.content;
+      contentInput.rows = 10;
+      contentInput.placeholder = 'Blog Article';
+      const imageInput = document.createElement('input');
+      imageInput.type = 'file';
+      imageInput.accept = 'image/jpeg,image/png,image/webp';
+      const saveButton = document.createElement('button');
+      saveButton.textContent = 'Save Blog Changes';
+      const cancelButton = document.createElement('button');
+      cancelButton.textContent = 'Cancel';
+      cancelButton.className = 'cancel-btn';
+      card.append(heading, titleInput, descriptionInput, categoryInput, contentInput, imageInput, saveButton, cancelButton);
+      cancelButton.addEventListener('click', loadBlogs);
+
+      saveButton.addEventListener('click', async () => {
+        const title = titleInput.value.trim();
+        const description = descriptionInput.value.trim();
+        const category = categoryInput.value;
+        const content = contentInput.value.trim();
+        const file = imageInput.files[0];
+        if (!title || !content) { message.textContent = 'Blog title and content are required.'; return; }
+        saveButton.disabled = true;
+        try {
+          message.textContent = 'Saving blog changes...';
+          let imageUrl = item.image_url;
+          if (file) imageUrl = await uploadImage(file);
+          const { error } = await supabase.from('blog_posts').update({ title, description, category, content, image_url: imageUrl }).eq('id', item.id);
+          if (error) throw error;
+          if (file) await removeStoredImage(item.image_url);
+          message.textContent = 'Blog updated successfully!';
+          await loadBlogs();
+        } catch (error) {
+          message.textContent = 'Blog update failed: ' + error.message;
+          saveButton.disabled = false;
+        }
+      });
+    }
+
+    document.getElementById('refreshButton').addEventListener('click', loadPhotos);
+    document.getElementById('refreshBlogsButton').addEventListener('click', loadBlogs);
+    document.getElementById('logoutButton').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.href = 'admin.html';
+    });
+  </script>
+</body>
 </html>
