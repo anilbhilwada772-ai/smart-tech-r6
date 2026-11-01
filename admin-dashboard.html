@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Smart Tech R6</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f6ff;
+      margin: 0;
+      padding: 20px;
+      color: #172033;
+    }
+    .dashboard {
+      max-width: 850px;
+      margin: 20px auto;
+      background: white;
+      padding: 22px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px #0001;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 13px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    button {
+      background: #1769e0;
+      color: white;
+      border: 0;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .6; cursor: wait; }
+    .delete-btn { background: #d93025; }
+    .cancel-btn { background: #687386; }
+    .item {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 15px 0;
+    }
+    .item img {
+      width: 100%;
+      max-height: 230px;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #f4f4f4;
+    }
+    #message { overflow-wrap: anywhere; }
+    .muted { color: #687386; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main class="dashboard">
+    <h1>Smart Tech R6</h1>
+    <h2>Admin Dashboard</h2>
+
+    <h3>Upload New AI Photo</h3>
+    <form id="uploadForm">
+      <input id="title" type="text" placeholder="Photo Title" required>
+      <input id="photo" type="file"
+        accept="image/jpeg,image/png,image/webp" required>
+      <textarea id="prompt" placeholder="Write AI Photo Prompt"
+        rows="7" required></textarea>
+      <button type="submit">Upload Photo & Prompt</button>
+    </form>
+
+    <p id="message" role="status"></p>
+
+    <hr>
+    <h2>Manage Uploaded Photos</h2>
+    <button id="refreshButton" type="button">Refresh Photos</button>
+    <div id="photoList">Loading photos...</div>
+
+    <button id="logoutButton" type="button" class="cancel-btn">
+      Logout
+    </button>
+  </main>
+
+  <script type="module">
+    import { supabase } from './supabase.js';
+
+    const ADMIN_EMAIL = 'anilbhilwada772@gmail.com';
+
+    const message = document.getElementById('message');
+    const form = document.getElementById('uploadForm');
+    const photoList = document.getElementById('photoList');
+
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session ||
+        session.user.email?.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+      window.location.replace('admin.html');
+    } else {
+      await loadPhotos();
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const title = document.getElementById('title').value.trim();
+      const prompt = document.getElementById('prompt').value.trim();
+      const file = document.getElementById('photo').files[0];
+
+      if (!file) return;
+
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        message.textContent = 'Please select JPG, PNG or WEBP image.';
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        message.textContent = 'Image must be smaller than 5 MB.';
+        return;
+      }
+
+      message.textContent = 'Uploading...';
+
+      const filePath = crypto.randomUUID() + '-' + file.name;
+
+      const { error: uploadError } = await supabase.storage
+        .from('ai-photos')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        message.textContent = uploadError.message;
+        return;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('ai-photos')
+        .getPublicUrl(filePath);
+
+      const { error: insertError } = await supabase
+        .from('ai_prompts')
+        .insert([{
+          title,
+          image_url: urlData.publicUrl,
+          prompt
+        }]);
+
+      if (insertError) {
+        message.textContent = 'Database error: ' + insertError.message;
+        return;
+      }
+
+      message.textContent = 'Photo and prompt uploaded successfully!';
+      form.reset();
+      await loadPhotos();
+    });
+
+    async function loadPhotos() {
+      photoList.textContent = 'Loading photos...';
+
+      const { data, error } = await supabase
+        .from('ai_prompts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        photoList.textContent = 'Error: ' + error.message;
+        return;
+      }
+
+      photoList.innerHTML = '';
+
+      if (!data || data.length === 0) {
+        photoList.textContent = 'No photos uploaded yet.';
+        return;
+      }
+
+      data.forEach((item) => {
+        const card = document.createElement('section');
+        card.className = 'item';
+
+        const img = document.createElement('img');
+        img.src = item.image_url;
+        img.alt = item.title;
+
+        const heading = document.createElement('h3');
+        heading.textContent = item.title;
+
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit Photo & Prompt';
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete Photo';
+        deleteButton.className = 'delete-btn';
+
+        card.append(img, heading, editButton, deleteButton);
+        photoList.appendChild(card);
+
+        editButton.addEventListener('click', () => {
+          showEditForm(card, item);
+        });
+
+        deleteButton.addEventListener('click', async () => {
+          const confirmed = confirm(
+            'Are you sure you want to delete this photo and prompt?'
+          );
+
+          if (!confirmed) return;
+
+          deleteButton.disabled = true;
+          message.textContent = 'Deleting...';
+
+          const { error: deleteError } = await supabase
+            .from('ai_prompts')
+            .delete()
+            .eq('id', item.id);
+
+          if (deleteError) {
+            message.textContent = 'Delete failed: ' + deleteError.message;
+            deleteButton.disabled = false;
+            return;
+          }
+
+          const marker = '/storage/v1/object/public/ai-photos/';
+          const url = new URL(item.image_url);
+          const position = url.pathname.indexOf(marker);
+
+          if (position !== -1) {
+            const filePath = decodeURIComponent(
+              url.pathname.substring(position + marker.length)
+            );
+
+            const { error: storageError } = await supabase.storage
+              .from('ai-photos')
+              .remove([filePath]);
+
+            if (storageError) {
+              message.textContent =
+                'Record deleted, but image cleanup failed: ' +
+                storageError.message;
+              await loadPhotos();
+              return;
+            }
+          }
+
+          message.textContent = 'Photo and prompt deleted successfully!';
+          await loadPhotos();
+        });
+      });
+    }
+
+    function showEditForm(card, item) {
+      card.innerHTML = '';
+
+      const heading = document.createElement('h3');
+      heading.textContent = 'Edit Photo & Prompt';
+
+      const titleInput = document.createElement('input');
+      titleInput.value = item.title;
+      titleInput.placeholder = 'Photo Title';
+
+      const promptInput = document.createElement('textarea');
+      promptInput.value = item.prompt;
+      promptInput.rows = 7;
+      promptInput.placeholder = 'Write AI Photo Prompt';
+
+      const imageInput = document.createElement('input');
+      imageInput.type = 'file';
+      imageInput.accept = 'image/jpeg,image/png,image/webp';
+
+      const saveButton = document.createElement('button');
+      saveButton.textContent = 'Save Changes';
+
+      const cancelButton = document.createElement('button');
+      cancelButton.textContent = 'Cancel';
+      cancelButton.className = 'cancel-btn';
+
+      card.append(
+        heading, titleInput, promptInput,
+        imageInput, saveButton, cancelButton
+      );
+
+      cancelButton.addEventListener('click', loadPhotos);
+
+      saveButton.addEventListener('click', async () => {
+        const title = titleInput.value.trim();
+        const prompt = promptInput.value.trim();
+        const file = imageInput.files[0];
+
+        if (!title || !prompt) {
+          message.textContent = 'Title and prompt are required.';
+          return;
+        }
+
+        if (file && !['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+          message.textContent = 'Please select JPG, PNG or WEBP image.';
+          return;
+        }
+
+        if (file && file.size > 5 * 1024 * 1024) {
+          message.textContent = 'Image must be smaller than 5 MB.';
+          return;
+        }
+
+        saveButton.disabled = true;
+        message.textContent = 'Saving changes...';
+
+        let imageUrl = item.image_url;
+
+        if (file) {
+          const filePath = crypto.randomUUID() + '-' + file.name;
+
+          const { error: uploadError } = await supabase.storage
+            .from('ai-photos')
+            .upload(filePath, file);
+
+          if (uploadError) {
+            message.textContent = uploadError.message;
+            saveButton.disabled = false;
+            return;
+          }
+
+          const { data: urlData } = supabase.storage
+            .from('ai-photos')
+            .getPublicUrl(filePath);
+
+          imageUrl = urlData.publicUrl;
+        }
+
+        const { error } = await supabase
+          .from('ai_prompts')
+          .update({
+            title,
+            prompt,
+            image_url: imageUrl
+          })
+          .eq('id', item.id);
+
+        if (error) {
+          message.textContent = 'Update failed: ' + error.message;
+          saveButton.disabled = false;
+          return;
+        }
+
+        message.textContent = 'Photo and prompt updated successfully!';
+        await loadPhotos();
+      });
+    }
+
+    document.getElementById('refreshButton')
+      .addEventListener('click', loadPhotos);
+
+    document.getElementById('logoutButton')
+      .addEventListener('click', async () => {
+        await supabase.auth.signOut();
+        window.location.href = 'admin.html';
+      });
+  </script>
+</body>
+</html>
