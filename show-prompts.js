@@ -2,11 +2,12 @@
 import { supabase } from './supabase.js';
 
 const gallery = document.getElementById('dynamicGallery');
+const categoryButtons = document.querySelectorAll('.category-btn');
+
+let allPrompts = [];
 
 async function loadPrompts() {
   if (!gallery) return;
-
-
 
   const { data, error } = await supabase
     .from('ai_prompts')
@@ -14,21 +15,39 @@ async function loadPrompts() {
     .order('created_at', { ascending: false });
 
   if (error) {
-    gallery.textContent = 'Photos load nahi ho paaye.';
     console.error(error);
     return;
   }
 
+  allPrompts = data || [];
+  showPrompts('All');
+}
 
+function showPrompts(selectedCategory) {
+  if (!gallery) return;
 
-  if (!data || data.length === 0) {
-    gallery.textContent = 'No AI Photos uploaded yet.';
-    return;
-  }
+  // पुराने Static Photo Cards को भी Filter में शामिल करें
+  const oldCards = gallery.querySelectorAll('.photo-card');
 
-  data.forEach((item) => {
+  oldCards.forEach((card) => {
+    const category = card.dataset.category || 'Other';
+    card.style.display =
+      selectedCategory === 'All' || category === selectedCategory
+        ? ''
+        : 'none';
+  });
+
+  // पहले से मौजूद Dynamic Cards हटाएँ
+  gallery.querySelectorAll('.prompt-card').forEach(card => card.remove());
+
+  const filteredPrompts = selectedCategory === 'All'
+    ? allPrompts
+    : allPrompts.filter(item => (item.category || 'Other') === selectedCategory);
+
+  filteredPrompts.forEach((item) => {
     const card = document.createElement('div');
     card.className = 'prompt-card';
+    card.dataset.category = item.category || 'Other';
 
     const image = document.createElement('img');
     image.src = item.image_url;
@@ -45,5 +64,12 @@ async function loadPrompts() {
     gallery.appendChild(card);
   });
 }
+
+categoryButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    const category = button.dataset.category;
+    showPrompts(category);
+  });
+});
 
 loadPrompts();
