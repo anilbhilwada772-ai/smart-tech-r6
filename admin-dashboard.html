@@ -54,6 +54,14 @@
     <form id="blogForm">
       <input id="blogTitle" type="text" placeholder="Blog Title" required>
       <input id="blogDescription" type="text" placeholder="Short Blog Description">
+      <select id="blogCategory" required>
+        <option value="Other">Select Blog Category</option>
+        <option value="AI Photo Editing">AI Photo Editing</option>
+        <option value="AI Video Editing">AI Video Editing</option>
+        <option value="AI Tools">AI Tools</option>
+        <option value="Tutorials">Tutorials</option>
+        <option value="Other">Other</option>
+      </select>
       <input id="blogImage" type="file" accept="image/jpeg,image/png,image/webp">
       <textarea id="blogContent" placeholder="Write full blog article here..." rows="10" required></textarea>
       <button type="submit">Publish Blog</button>
@@ -219,13 +227,14 @@
       const title = document.getElementById('blogTitle').value.trim();
       const description = document.getElementById('blogDescription').value.trim();
       const content = document.getElementById('blogContent').value.trim();
+      const category = document.getElementById('blogCategory').value;
       const file = document.getElementById('blogImage').files[0];
 
       try {
         message.textContent = 'Publishing blog...';
         let imageUrl = null;
         if (file) imageUrl = await uploadImage(file);
-        const { error } = await supabase.from('blog_posts').insert([{ title, description, content, image_url: imageUrl }]);
+        const { error } = await supabase.from('blog_posts').insert([{ title, description, content, category, image_url: imageUrl }]);
         if (error) throw error;
         message.textContent = 'Blog published successfully!';
         blogForm.reset();
@@ -285,6 +294,14 @@
       const descriptionInput = document.createElement('input');
       descriptionInput.value = item.description || '';
       descriptionInput.placeholder = 'Short Blog Description';
+      const categoryInput = document.createElement('select');
+      ['AI Photo Editing', 'AI Video Editing', 'AI Tools', 'Tutorials', 'Other'].forEach((value) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        categoryInput.appendChild(option);
+      });
+      categoryInput.value = item.category || 'Other';
       const contentInput = document.createElement('textarea');
       contentInput.value = item.content;
       contentInput.rows = 10;
@@ -297,12 +314,13 @@
       const cancelButton = document.createElement('button');
       cancelButton.textContent = 'Cancel';
       cancelButton.className = 'cancel-btn';
-      card.append(heading, titleInput, descriptionInput, contentInput, imageInput, saveButton, cancelButton);
+      card.append(heading, titleInput, descriptionInput, categoryInput, contentInput, imageInput, saveButton, cancelButton);
       cancelButton.addEventListener('click', loadBlogs);
 
       saveButton.addEventListener('click', async () => {
         const title = titleInput.value.trim();
         const description = descriptionInput.value.trim();
+        const category = categoryInput.value;
         const content = contentInput.value.trim();
         const file = imageInput.files[0];
         if (!title || !content) { message.textContent = 'Blog title and content are required.'; return; }
@@ -311,7 +329,7 @@
           message.textContent = 'Saving blog changes...';
           let imageUrl = item.image_url;
           if (file) imageUrl = await uploadImage(file);
-          const { error } = await supabase.from('blog_posts').update({ title, description, content, image_url: imageUrl }).eq('id', item.id);
+          const { error } = await supabase.from('blog_posts').update({ title, description, category, content, image_url: imageUrl }).eq('id', item.id);
           if (error) throw error;
           if (file) await removeStoredImage(item.image_url);
           message.textContent = 'Blog updated successfully!';

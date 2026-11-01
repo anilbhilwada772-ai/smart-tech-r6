@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,32 +6,15 @@
   <title>AI Blog - Smart Tech R6</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .blog-container {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 20px;
-    }
-    .blog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 22px;
-    }
-    .blog-card {
-      background: white;
-      padding: 15px;
-      border-radius: 14px;
-      box-shadow: 0 4px 15px rgba(30,80,140,.12);
-    }
-    .blog-card img {
-      width: 100%;
-      height: 190px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-    .blog-card a {
-      color: #1769e0;
-      font-weight: bold;
-    }
+    .blog-container { max-width: 1100px; margin: 30px auto; padding: 20px; }
+    .blog-controls { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin: 24px 0; }
+    .blog-controls input, .blog-controls select { width: 100%; padding: 13px 15px; border: 1px solid #cbdaf0; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; }
+    .blog-card { background: white; padding: 15px; border-radius: 14px; box-shadow: 0 4px 15px rgba(30,80,140,.12); }
+    .blog-card img { width: 100%; height: 190px; object-fit: cover; border-radius: 10px; }
+    .blog-card a { color: #1769e0; font-weight: bold; }
+    .blog-category { display: inline-block; background: #eaf2ff; color: #1769e0; padding: 5px 9px; border-radius: 20px; font-size: 12px; margin: 8px 0; }
+    @media(max-width:600px) { .blog-controls { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -40,52 +22,72 @@
     <a href="index.html">← Back to Home</a>
     <h1>Smart Tech R6 Blog</h1>
     <p>Latest AI Editing Tutorials, Tips and Trends</p>
-    <div class="blog-grid" id="blogList">
-      Loading Blogs...
+    <div class="blog-controls">
+      <input id="blogSearch" type="search" placeholder="Search blogs by title..." aria-label="Search blogs">
+      <select id="categoryFilter" aria-label="Filter blogs by category">
+        <option value="All">All Categories</option>
+        <option value="AI Photo Editing">AI Photo Editing</option>
+        <option value="AI Video Editing">AI Video Editing</option>
+        <option value="AI Tools">AI Tools</option>
+        <option value="Tutorials">Tutorials</option>
+        <option value="Other">Other</option>
+      </select>
     </div>
+    <div class="blog-grid" id="blogList">Loading Blogs...</div>
   </main>
-
   <script type="module">
     import { supabase } from './supabase.js';
-
     const blogList = document.getElementById('blogList');
+    const search = document.getElementById('blogSearch');
+    const filter = document.getElementById('categoryFilter');
+    let allBlogs = [];
 
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    blogList.innerHTML = '';
-
-    if (error) {
-      blogList.textContent = 'Unable to load blogs.';
-    } else if (!data || data.length === 0) {
-      blogList.textContent = 'No blogs published yet.';
-    } else {
-      data.forEach(post => {
+    function renderBlogs() {
+      const query = search.value.trim().toLowerCase();
+      const category = filter.value;
+      const results = allBlogs.filter(post => {
+        const matchesText = (post.title || '').toLowerCase().includes(query);
+        const matchesCategory = category === 'All' || (post.category || 'Other') === category;
+        return matchesText && matchesCategory;
+      });
+      blogList.innerHTML = '';
+      if (!results.length) {
+        blogList.textContent = 'No matching blogs found.';
+        return;
+      }
+      results.forEach(post => {
         const card = document.createElement('article');
         card.className = 'blog-card';
-
         if (post.image_url) {
           const img = document.createElement('img');
           img.src = post.image_url;
           img.alt = post.title;
           card.appendChild(img);
         }
-
+        const categoryLabel = document.createElement('span');
+        categoryLabel.className = 'blog-category';
+        categoryLabel.textContent = post.category || 'Other';
         const heading = document.createElement('h2');
         heading.textContent = post.title;
-
         const description = document.createElement('p');
         description.textContent = post.description || '';
-
         const link = document.createElement('a');
         link.href = `blog-detail.html?id=${encodeURIComponent(post.id)}`;
         link.textContent = 'Read More';
-
-        card.append(heading, description, link);
+        card.append(categoryLabel, heading, description, link);
         blogList.appendChild(card);
       });
+    }
+
+    search.addEventListener('input', renderBlogs);
+    filter.addEventListener('change', renderBlogs);
+    const { data, error } = await supabase
+      .from('blog_posts').select('*').order('created_at', { ascending: false });
+    if (error) {
+      blogList.textContent = 'Unable to load blogs: ' + error.message;
+    } else {
+      allBlogs = data || [];
+      renderBlogs();
     }
   </script>
 </body>
