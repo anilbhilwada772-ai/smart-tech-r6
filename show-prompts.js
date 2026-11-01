@@ -6,7 +6,7 @@ const gallery = document.getElementById('dynamicGallery');
 async function loadPrompts() {
   if (!gallery) return;
 
-  gallery.textContent = 'Loading AI Photos...';
+
 
   const { data, error } = await supabase
     .from('ai_prompts')
@@ -19,7 +19,7 @@ async function loadPrompts() {
     return;
   }
 
-  gallery.innerHTML = '';
+
 
   if (!data || data.length === 0) {
     gallery.textContent = 'No AI Photos uploaded yet.';
