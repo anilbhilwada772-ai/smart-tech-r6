@@ -3,8 +3,13 @@ import { supabase } from './supabase.js';
 
 const gallery = document.getElementById('dynamicGallery');
 const categoryButtons = document.querySelectorAll('.category-btn');
+const loadMoreBtn = document.getElementById('loadMoreBtn');
 
 let allPrompts = [];
+let selectedCategory = 'All';
+let visibleCount = 6;
+
+const PHOTOS_PER_PAGE = 6;
 
 async function loadPrompts() {
   if (!gallery) return;
@@ -23,28 +28,35 @@ async function loadPrompts() {
   showPrompts('All');
 }
 
-function showPrompts(selectedCategory) {
+function showPrompts(category) {
   if (!gallery) return;
 
-  // पुराने Static Photo Cards को भी Filter में शामिल करें
+  selectedCategory = category;
+  visibleCount = 6;
+
   const oldCards = gallery.querySelectorAll('.photo-card');
 
   oldCards.forEach((card) => {
-    const category = card.dataset.category || 'Other';
+    const cardCategory = card.dataset.category || 'Other';
     card.style.display =
-      selectedCategory === 'All' || category === selectedCategory
-        ? ''
-        : 'none';
+      category === 'All' || category === cardCategory ? '' : 'none';
   });
 
-  // पहले से मौजूद Dynamic Cards हटाएँ
+  renderPrompts();
+}
+
+function renderPrompts() {
   gallery.querySelectorAll('.prompt-card').forEach(card => card.remove());
 
   const filteredPrompts = selectedCategory === 'All'
     ? allPrompts
-    : allPrompts.filter(item => (item.category || 'Other') === selectedCategory);
+    : allPrompts.filter(
+        item => (item.category || 'Other') === selectedCategory
+      );
 
-  filteredPrompts.forEach((item) => {
+  const visiblePrompts = filteredPrompts.slice(0, visibleCount);
+
+  visiblePrompts.forEach((item) => {
     const card = document.createElement('div');
     card.className = 'prompt-card';
     card.dataset.category = item.category || 'Other';
@@ -63,13 +75,24 @@ function showPrompts(selectedCategory) {
     card.append(image, heading, link);
     gallery.appendChild(card);
   });
+
+  if (loadMoreBtn) {
+    loadMoreBtn.style.display =
+      visibleCount < filteredPrompts.length ? 'inline-block' : 'none';
+  }
 }
 
 categoryButtons.forEach((button) => {
   button.addEventListener('click', () => {
-    const category = button.dataset.category;
-    showPrompts(category);
+    showPrompts(button.dataset.category);
   });
 });
+
+if (loadMoreBtn) {
+  loadMoreBtn.addEventListener('click', () => {
+    visibleCount += PHOTOS_PER_PAGE;
+    renderPrompts();
+  });
+}
 
 loadPrompts();
