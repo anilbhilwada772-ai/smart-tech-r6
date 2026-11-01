@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog - Smart Tech R6</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .article-container {
+      max-width: 850px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+    }
+    .article-container img {
+      width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+    .article-content {
+      line-height: 1.8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+  </style>
+</head>
+<body>
+  <main class="article-container">
+    <a href="blog.html">← Back to Blog</a>
+    <h1 id="blogTitle">Loading...</h1>
+    <img id="blogImage" alt="Blog Image" hidden>
+    <p id="blogDescription"></p>
+    <div class="article-content" id="blogContent"></div>
+  </main>
+
+  <script type="module">
+    import { supabase } from './supabase.js';
+
+    const id = new URLSearchParams(location.search).get('id');
+    const title = document.getElementById('blogTitle');
+    const image = document.getElementById('blogImage');
+    const description = document.getElementById('blogDescription');
+    const content = document.getElementById('blogContent');
+
+    if (!id) {
+      title.textContent = 'Blog not found';
+    } else {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error || !data) {
+        title.textContent = 'Blog not found';
+      } else {
+        title.textContent = data.title;
+        description.textContent = data.description || '';
+        content.textContent = data.content;
+
+        if (data.image_url) {
+          image.src = data.image_url;
+          image.hidden = false;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
