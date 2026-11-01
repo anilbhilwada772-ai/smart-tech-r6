@@ -1,42 +1,92 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - Smart Tech R6</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Blog - Smart Tech R6</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .blog-container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 22px;
+    }
+    .blog-card {
+      background: white;
+      padding: 15px;
+      border-radius: 14px;
+      box-shadow: 0 4px 15px rgba(30,80,140,.12);
+    }
+    .blog-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .blog-card a {
+      color: #1769e0;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-
-<header>
-    <h2>Smart Tech R6</h2>
-    <p>AI Photo Editing & Prompt Gallery</p>
-</header>
-<nav>
-    <a href="index.html">Home</a>
-    <a href="tools.html">Tools</a>
-    <a href="prompts.html">Prompts</a>
-    <a href="blog.html">Blog</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-</nav>
-<main>
+  <main class="blog-container">
     <a href="index.html">← Back to Home</a>
-
     <h1>Smart Tech R6 Blog</h1>
-    <p>Learn AI photo editing, video editing and creative tips.</p>
-
-    <div class="prompt-box">
-        <h2>AI Photo Editing Tips</h2>
-        <p>Learn how to create amazing AI photos using creative prompts.</p>
+    <p>Latest AI Editing Tutorials, Tips and Trends</p>
+    <div class="blog-grid" id="blogList">
+      Loading Blogs...
     </div>
+  </main>
 
-    <div class="prompt-box">
-        <h2>AI Video Editing Tips</h2>
-        <p>Discover new ideas for creating trending AI videos.</p>
-    </div>
+  <script type="module">
+    import { supabase } from './supabase.js';
 
-</main>
+    const blogList = document.getElementById('blogList');
 
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    blogList.innerHTML = '';
+
+    if (error) {
+      blogList.textContent = 'Unable to load blogs.';
+    } else if (!data || data.length === 0) {
+      blogList.textContent = 'No blogs published yet.';
+    } else {
+      data.forEach(post => {
+        const card = document.createElement('article');
+        card.className = 'blog-card';
+
+        if (post.image_url) {
+          const img = document.createElement('img');
+          img.src = post.image_url;
+          img.alt = post.title;
+          card.appendChild(img);
+        }
+
+        const heading = document.createElement('h2');
+        heading.textContent = post.title;
+
+        const description = document.createElement('p');
+        description.textContent = post.description || '';
+
+        const link = document.createElement('a');
+        link.href = `blog-detail.html?id=${encodeURIComponent(post.id)}`;
+        link.textContent = 'Read More';
+
+        card.append(heading, description, link);
+        blogList.appendChild(card);
+      });
+    }
+  </script>
 </body>
 </html>
