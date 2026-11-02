@@ -4,20 +4,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>AI Photo Prompt - Smart Tech R6</title>
+
+  <meta name="description" content="Explore creative AI photo editing prompts at Smart Tech R6.">
+  <meta name="robots" content="index, follow">
+
+  <link rel="canonical" id="canonicalUrl"
+        href="https://anilbhilwada772-ai.github.io/smart-tech-r6/prompt-detail.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Smart Tech R6">
+  <meta property="og:title" id="ogTitle" content="AI Photo Prompt - Smart Tech R6">
+  <meta property="og:description" id="ogDescription" content="Explore AI photo editing prompts.">
+  <meta property="og:image" id="ogImage" content="">
+  <meta property="og:url" id="ogUrl" content="">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" id="twitterTitle" content="AI Photo Prompt - Smart Tech R6">
+  <meta name="twitter:description" id="twitterDescription" content="Explore AI photo editing prompts.">
+  <meta name="twitter:image" id="twitterImage" content="">
+
   <link rel="stylesheet" href="style.css">
+
   <style>
     .detail-container {
       max-width: 850px;
       margin: 30px auto;
       padding: 20px;
     }
+
     .detail-container img {
       width: 100%;
       max-height: 550px;
       object-fit: contain;
       border-radius: 12px;
     }
+
     .prompt-box {
       background: #f2f6ff;
       padding: 18px;
@@ -25,6 +50,7 @@
       overflow-wrap: anywhere;
       line-height: 1.7;
     }
+
     .copy-button {
       background: #1769e0;
       color: white;
@@ -36,81 +62,173 @@
     }
   </style>
 </head>
+
 <body>
   <main class="detail-container">
+
     <a href="index.html">← Back to Home</a>
+
     <h1 id="photoTitle">Loading...</h1>
-    <img id="photoImage" alt="AI Photo">
-    <h2>AI Photo Prompt</h2>
+
+    <img id="photoImage" alt="AI Photo Editing Prompt" loading="eager">
+
+    <h2>AI Photo Editing Prompt</h2>
+
     <div class="prompt-box" id="photoPrompt"></div>
+
     <button class="copy-button" id="copyButton">Copy Prompt</button>
+
     <button class="copy-button" id="shareButton">Share Prompt</button>
+
     <p id="message"></p>
+
   </main>
 
   <script type="module">
     import { supabase } from './supabase.js';
 
+    const base = 'https://anilbhilwada772-ai.github.io/smart-tech-r6/';
+
     const id = new URLSearchParams(window.location.search).get('id');
+
     const title = document.getElementById('photoTitle');
     const image = document.getElementById('photoImage');
     const prompt = document.getElementById('photoPrompt');
     const message = document.getElementById('message');
+
     const copyButton = document.getElementById('copyButton');
     const shareButton = document.getElementById('shareButton');
 
+    function setMeta(selector, value) {
+      const element = document.querySelector(selector);
+      if (element) element.setAttribute('content', value);
+    }
+
+    function setSEO(data) {
+      const pageTitle = data.title + ' | AI Photo Editing Prompt - Smart Tech R6';
+
+      const cleanPrompt = data.prompt.replace(/\s+/g, ' ').trim();
+
+      const description = cleanPrompt.length > 150
+        ? cleanPrompt.substring(0, 147) + '...'
+        : cleanPrompt;
+
+      const pageUrl = window.location.origin +
+        window.location.pathname + '?id=' + encodeURIComponent(data.id);
+
+      document.title = pageTitle;
+
+      setMeta('meta[name="description"]', description);
+      setMeta('#ogTitle', pageTitle);
+      setMeta('#ogDescription', description);
+      setMeta('#ogImage', data.image_url);
+      setMeta('#ogUrl', pageUrl);
+
+      setMeta('#twitterTitle', pageTitle);
+      setMeta('#twitterDescription', description);
+      setMeta('#twitterImage', data.image_url);
+
+      document.getElementById('canonicalUrl').href = pageUrl;
+
+      const oldSchema = document.getElementById('promptSchema');
+      if (oldSchema) oldSchema.remove();
+
+      const schema = document.createElement('script');
+      schema.type = 'application/ld+json';
+      schema.id = 'promptSchema';
+
+      schema.textContent = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'CreativeWork',
+        'name': data.title,
+        'description': description,
+        'image': data.image_url,
+        'url': pageUrl,
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'Smart Tech R6',
+          'url': base
+        }
+      });
+
+      document.head.appendChild(schema);
+    }
+
     if (!id) {
       title.textContent = 'Photo not found';
+      message.textContent = 'No Prompt ID was provided.';
+      copyButton.hidden = true;
+      shareButton.hidden = true;
     } else {
-      const { data, error } = await supabase
-        .from('ai_prompts')
-        .select('*')
-        .eq('id', id)
-        .single();
 
-      if (error || !data) {
-        title.textContent = 'Photo not found';
-        message.textContent = 'Please go back and try again.';
-      } else {
-        title.textContent = data.title;
-        image.src = data.image_url;
-        prompt.textContent = data.prompt;
+      try {
+        const { data, error } = await supabase
+          .from('ai_prompts')
+          .select('*')
+          .eq('id', id)
+          .single();
 
-        copyButton.addEventListener('click', async () => {
-          try {
-            await navigator.clipboard.writeText(data.prompt);
-            message.textContent = 'Prompt copied successfully!';
-          } catch {
-            message.textContent = 'Copy failed. Please select and copy the prompt.';
-          }
-        });
+        if (error || !data) {
+          title.textContent = 'Photo not found';
+          message.textContent = 'Please go back and try again.';
+          copyButton.hidden = true;
+          shareButton.hidden = true;
 
-        shareButton.addEventListener('click', async () => {
-          const shareData = {
-            title: data.title,
-            text: data.prompt,
-            url: window.location.href
-          };
+        } else {
 
-          if (navigator.share) {
+          title.textContent = data.title;
+          image.src = data.image_url;
+          image.alt = data.title + ' AI Photo Editing Prompt';
+
+          prompt.textContent = data.prompt;
+
+          setSEO(data);
+
+          copyButton.addEventListener('click', async () => {
             try {
-              await navigator.share(shareData);
-            } catch (error) {
-              console.log('Share cancelled');
-            }
-          } else {
-            try {
-              await navigator.clipboard.writeText(
-                data.prompt + '\n' + window.location.href
-              );
-              message.textContent = 'Prompt and link copied!';
+              await navigator.clipboard.writeText(data.prompt);
+              message.textContent = 'Prompt copied successfully!';
             } catch {
-              message.textContent = 'Unable to share. Please copy manually.';
+              message.textContent = 'Copy failed. Please select and copy the prompt.';
             }
-          }
-        });
+          });
+
+          shareButton.addEventListener('click', async () => {
+
+            const shareData = {
+              title: data.title,
+              text: data.prompt,
+              url: window.location.href
+            };
+
+            if (navigator.share) {
+              try {
+                await navigator.share(shareData);
+              } catch {
+                console.log('Share cancelled');
+              }
+            } else {
+              try {
+                await navigator.clipboard.writeText(
+                  data.prompt + '\n' + window.location.href
+                );
+
+                message.textContent = 'Prompt and link copied!';
+
+              } catch {
+                message.textContent = 'Unable to share. Please copy manually.';
+              }
+            }
+          });
+        }
+
+      } catch (error) {
+        console.error(error);
+        title.textContent = 'Something went wrong';
+        message.textContent = 'Please try again later.';
       }
     }
   </script>
+
 </body>
 </html>
