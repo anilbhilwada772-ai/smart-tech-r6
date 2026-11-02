@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Gallery Post | Smart Tech R6</title>
+<meta name="description" content="Explore AI photos, prompts and videos on Smart Tech R6.">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f7fc;color:#172033;font-family:Arial,sans-serif}
+header{background:#1769e0;color:white;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header a{color:white;text-decoration:none}
+.container{max-width:1000px;margin:25px auto;padding:15px}
+#postTitle{font-size:30px;margin-bottom:8px}
+#postDescription{color:#64748b;line-height:1.6}
+.item-card{background:white;padding:16px;margin:22px 0;border-radius:13px;box-shadow:0 3px 14px #0000000c}
+.item-card img,.item-card video{width:100%;max-height:650px;object-fit:contain;border-radius:9px;background:#eef2f7}
+.prompt{background:#f1f5f9;padding:15px;border-radius:9px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
+button{background:#1769e0;color:white;border:0;padding:12px 18px;border-radius:8px;cursor:pointer;font-weight:bold}
+button:hover{background:#0d51b5}
+.copy-status{color:#16803c;font-size:14px;margin-left:10px}
+.category{color:#1769e0;font-weight:bold}
+#message{padding:20px;background:white;border-radius:10px}
+iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:9px}
+footer{text-align:center;padding:25px;color:#64748b}
+</style>
+</head>
+<body>
+
+<header>
+  <strong>Smart Tech R6</strong>
+  <a href="index.html">← Back to Home</a>
+</header>
+
+<main class="container">
+  <div id="message">Loading post...</div>
+
+  <article id="post" hidden>
+    <p class="category" id="category"></p>
+    <h1 id="postTitle"></h1>
+    <p id="postDescription"></p>
+    <div id="postItems"></div>
+  </article>
+</main>
+
+<footer>© Smart Tech R6 | AI Tools & Prompt Gallery</footer>
+
+<script type="module">
+import { supabase } from './supabase.js';
+
+const message = document.getElementById('message');
+const post = document.getElementById('post');
+const postItems = document.getElementById('postItems');
+
+function addText(parent, tag, value, className=''){
+  const el=document.createElement(tag);
+  el.textContent=value || '';
+  if(className) el.className=className;
+  parent.appendChild(el);
+  return el;
+}
+
+function youtubeId(url){
+  try{
+    const u=new URL(url);
+    if(u.hostname==='youtu.be') return u.pathname.slice(1);
+    if(['youtube.com','www.youtube.com','m.youtube.com'].includes(u.hostname)){
+      if(u.pathname==='/watch') return u.searchParams.get('v');
+      const match=u.pathname.match(/^\/(embed|shorts)\/([^/?]+)/);
+      return match ? match[2] : null;
+    }
+  }catch{}
+  return null;
+}
+
+async function copyPrompt(text, status){
+  try{
+    await navigator.clipboard.writeText(text);
+    status.textContent='Copied successfully!';
+  }catch{
+    status.textContent='Copy failed. Please select and copy the prompt.';
+  }
+}
+
+function renderItem(item){
+  const card=document.createElement('section');
+  card.className='item-card';
+
+  if(item.item_type==='photo'){
+    const img=document.createElement('img');
+    img.src=item.media_url;
+    img.alt='AI Photo';
+    img.loading='lazy';
+    card.appendChild(img);
+
+    addText(card,'h3','AI Photo Prompt');
+
+    if(item.prompt){
+      const prompt=addText(card,'div',item.prompt,'prompt');
+      const row=document.createElement('div');
+      row.style.marginTop='12px';
+
+      const btn=document.createElement('button');
+      btn.textContent='Copy Prompt';
+
+      const status=document.createElement('span');
+      status.className='copy-status';
+
+      btn.onclick=()=>copyPrompt(item.prompt,status);
+      row.append(btn,status);
+      card.appendChild(row);
+    }
+  }
+  else if(item.item_type==='video_upload'){
+    const video=document.createElement('video');
+    video.src=item.media_url;
+    video.controls=true;
+    video.preload='metadata';
+    card.appendChild(video);
+  }
+  else if(item.item_type==='youtube'){
+    const id=youtubeId(item.media_url);
+    if(id){
+      const frame=document.createElement('iframe');
+      frame.src='https://www.youtube.com/embed/'+encodeURIComponent(id);
+      frame.title='YouTube Video';
+      frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      frame.allowFullscreen=true;
+      card.appendChild(frame);
+    }else{
+      const link=document.createElement('a');
+      link.href=item.media_url;
+      link.textContent='Watch on YouTube';
+      link.target='_blank';
+      link.rel='noopener noreferrer';
+      card.appendChild(link);
+    }
+  }
+
+  if(item.description){
+    addText(card,'p',item.description);
+  }
+
+  postItems.appendChild(card);
+}
+
+async function loadPost(){
+  const id=new URLSearchParams(location.search).get('id');
+
+  if(!id){
+    message.textContent='Post ID not found.';
+    return;
+  }
+
+  try{
+    const {data:postData,error:postError}=await supabase
+      .from('gallery_posts')
+      .select('id,title,category,description')
+      .eq('id',id)
+      .eq('is_published',true)
+      .maybeSingle();
+
+    if(postError) throw postError;
+    if(!postData){
+      message.textContent='Post not found or not published.';
+      return;
+    }
+
+    const {data:items,error:itemError}=await supabase
+      .from('gallery_items')
+      .select('id,item_type,media_url,prompt,description,sort_order')
+      .eq('post_id',id)
+      .order('sort_order',{ascending:true});
+
+    if(itemError) throw itemError;
+
+    document.title=postData.title+' | Smart Tech R6';
+    document.getElementById('postTitle').textContent=postData.title;
+    document.getElementById('category').textContent=postData.category||'AI Gallery';
+    document.getElementById('postDescription').textContent=postData.description||'';
+
+    postItems.innerHTML='';
+
+    (items||[]).forEach(renderItem);
+
+    if(!items||items.length===0){
+      addText(postItems,'p','No photos or videos in this post yet.');
+    }
+
+    message.hidden=true;
+    post.hidden=false;
+
+  }catch(error){
+    message.textContent='Error loading post: '+error.message;
+  }
+}
+
+loadPost();
+</script>
+</body>
+</html>
