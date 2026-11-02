@@ -151,6 +151,122 @@
     <h3>Smart Tech R6</h3>
     <p>AI Photo Editing Prompts, Tools and Creative Ideas.</p>
     <p>© 2026 Smart Tech R6. All Rights Reserved.</p>
+    
+<!-- SMART TECH R6 - PUBLIC GALLERY -->
+<section id="publicGallery" class="public-gallery">
+  <div class="gallery-heading">
+    <h2>Latest AI Photo Prompts</h2>
+    <p>Explore trending AI photos and their prompts.</p>
+  </div>
+
+  <div id="galleryPosts" class="gallery-posts">
+    <p>Loading gallery posts...</p>
+  </div>
+</section>
+
+<style>
+.public-gallery {
+  max-width: 1200px;
+  margin: 35px auto;
+  padding: 20px;
+}
+.gallery-heading {
+  text-align: center;
+  margin-bottom: 25px;
+}
+.gallery-heading h2 {
+  color: #1769e0;
+  font-size: 28px;
+}
+.gallery-posts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 20px;
+}
+.gallery-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px #00000010;
+  cursor: pointer;
+  transition: transform .2s;
+}
+.gallery-card:hover {
+  transform: translateY(-4px);
+}
+.gallery-card img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+}
+.gallery-card h3 {
+  padding: 0 14px;
+  margin-bottom: 8px;
+}
+.gallery-card p {
+  padding: 0 14px 14px;
+  color: #64748b;
+  margin-top: 0;
+}
+</style>
+
+<script type="module">
+import { supabase } from './supabase.js';
+
+const gallery = document.getElementById('galleryPosts');
+
+async function loadGalleryPosts() {
+  try {
+    const { data, error } = await supabase
+      .from('gallery_posts')
+      .select('id,title,category,description,thumbnail_url,created_at')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    gallery.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      gallery.textContent = 'No published posts available yet.';
+      return;
+    }
+
+    data.forEach(post => {
+      const card = document.createElement('article');
+      card.className = 'gallery-card';
+
+      const link = document.createElement('a');
+      link.href = 'gallery-detail.html?id=' + encodeURIComponent(post.id);
+      link.style.cssText = 'color:inherit;text-decoration:none;display:block';
+
+      const img = document.createElement('img');
+      img.src = post.thumbnail_url;
+      img.alt = post.title || 'AI Photo';
+      img.loading = 'lazy';
+
+      const title = document.createElement('h3');
+      title.textContent = post.title || 'AI Photo';
+
+      const category = document.createElement('p');
+      category.textContent = post.category || 'AI Gallery';
+
+      link.append(img, title, category);
+      card.append(link);
+      gallery.append(card);
+    });
+
+  } catch (error) {
+    gallery.textContent = 'Gallery loading failed: ' + error.message;
+    console.error(error);
+  }
+}
+
+loadGalleryPosts();
+</script>
+<!-- END SMART TECH R6 PUBLIC GALLERY -->
 </footer>
 <script type="module" src="show-prompts.js"></script>
 <script type="module" src="featured.js"></script>
