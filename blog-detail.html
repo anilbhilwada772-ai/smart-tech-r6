@@ -4,8 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Blog - Smart Tech R6</title>
+  <meta name="description" content="Read AI photo editing tips, tutorials and technology articles on Smart Tech R6.">
+
   <link rel="stylesheet" href="style.css">
+
   <style>
     .article-container {
       max-width: 850px;
@@ -13,12 +17,14 @@
       padding: 20px;
       background: white;
     }
+
     .article-container img {
       width: 100%;
       max-height: 500px;
       object-fit: contain;
       border-radius: 12px;
     }
+
     .article-content {
       line-height: 1.8;
       white-space: pre-wrap;
@@ -26,12 +32,17 @@
     }
   </style>
 </head>
+
 <body>
   <main class="article-container">
     <a href="blog.html">← Back to Blog</a>
+
     <h1 id="blogTitle">Loading...</h1>
-    <img id="blogImage" alt="Blog Image" hidden>
+
+    <img id="blogImage" alt="AI and technology blog article" hidden>
+
     <p id="blogDescription"></p>
+
     <div class="article-content" id="blogContent"></div>
   </main>
 
@@ -39,13 +50,103 @@
     import { supabase } from './supabase.js';
 
     const id = new URLSearchParams(location.search).get('id');
+
     const title = document.getElementById('blogTitle');
     const image = document.getElementById('blogImage');
     const description = document.getElementById('blogDescription');
     const content = document.getElementById('blogContent');
 
+    function setMeta(attribute, key, value) {
+      let element = document.querySelector(
+        `meta[${attribute}="${key}"]`
+      );
+
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(attribute, key);
+        document.head.appendChild(element);
+      }
+
+      element.setAttribute('content', value);
+    }
+
+    function setSEO(data) {
+      const pageTitle =
+        data.title + ' | AI & Technology Blog - Smart Tech R6';
+
+      const pageDescription = (
+        data.description || data.content || data.title
+      ).replace(/\s+/g, ' ').slice(0, 155);
+
+      const pageUrl =
+        window.location.origin +
+        window.location.pathname +
+        '?id=' + encodeURIComponent(data.id);
+
+      document.title = pageTitle;
+
+      setMeta('name', 'description', pageDescription);
+      setMeta('property', 'og:type', 'article');
+      setMeta('property', 'og:title', pageTitle);
+      setMeta('property', 'og:description', pageDescription);
+      setMeta('property', 'og:url', pageUrl);
+
+      setMeta('name', 'twitter:card', 'summary_large_image');
+      setMeta('name', 'twitter:title', pageTitle);
+      setMeta('name', 'twitter:description', pageDescription);
+
+      let canonical = document.querySelector('link[rel="canonical"]');
+
+      if (!canonical) {
+        canonical = document.createElement('link');
+        canonical.rel = 'canonical';
+        document.head.appendChild(canonical);
+      }
+
+      canonical.href = pageUrl;
+
+      if (data.image_url) {
+        setMeta('property', 'og:image', data.image_url);
+        setMeta('name', 'twitter:image', data.image_url);
+      }
+
+      const oldSchema = document.getElementById('blogSchema');
+      if (oldSchema) oldSchema.remove();
+
+      const schema = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        'headline': data.title,
+        'description': pageDescription,
+        'mainEntityOfPage': pageUrl,
+        'author': {
+          '@type': 'Organization',
+          'name': 'Smart Tech R6'
+        },
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'Smart Tech R6'
+        }
+      };
+
+      if (data.image_url) {
+        schema.image = data.image_url;
+      }
+
+      if (data.created_at) {
+        schema.datePublished = data.created_at;
+      }
+
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.id = 'blogSchema';
+      script.textContent = JSON.stringify(schema);
+      document.head.appendChild(script);
+    }
+
     if (!id) {
       title.textContent = 'Blog not found';
+      description.textContent = 'No Blog ID was provided.';
     } else {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -55,15 +156,19 @@
 
       if (error || !data) {
         title.textContent = 'Blog not found';
+        description.textContent = 'Please go back and try again.';
       } else {
         title.textContent = data.title;
         description.textContent = data.description || '';
-        content.textContent = data.content;
+        content.textContent = data.content || '';
 
         if (data.image_url) {
           image.src = data.image_url;
+          image.alt = data.title;
           image.hidden = false;
         }
+
+        setSEO(data);
       }
     }
   </script>
