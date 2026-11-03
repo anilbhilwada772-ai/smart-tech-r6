@@ -94,23 +94,48 @@ function renderItem(item){
     img.loading='lazy';
     card.appendChild(img);
 
-    addText(card,'h3','AI Photo Prompt');
+    
+addText(card,'h3','AI Photo Prompt');
 
-    if(item.prompt){
-      const prompt=addText(card,'div',item.prompt,'prompt');
-      const row=document.createElement('div');
-      row.style.marginTop='12px';
+if(item.prompt){
+  const prompt=addText(card,'div',item.prompt,'prompt');
 
-      const btn=document.createElement('button');
-      btn.textContent='Copy Prompt';
+  const row=document.createElement('div');
+  row.style.marginTop='12px';
+  row.style.display='flex';
+  row.style.flexWrap='wrap';
+  row.style.gap='10px';
 
-      const status=document.createElement('span');
-      status.className='copy-status';
+  // Copy Prompt Button
+  const btn=document.createElement('button');
+  btn.textContent='📋 Copy Prompt';
 
-      btn.onclick=()=>copyPrompt(item.prompt,status);
-      row.append(btn,status);
-      card.appendChild(row);
-    }
+  const status=document.createElement('span');
+  status.className='copy-status';
+
+  btn.onclick=()=>copyPrompt(item.prompt,status);
+
+  // Share to ChatGPT Button
+  const chatBtn=document.createElement('button');
+  chatBtn.textContent='🤖 Share to ChatGPT';
+
+  chatBtn.style.background='#10a37f';
+  chatBtn.style.color='#ffffff';
+  chatBtn.style.border='none';
+  chatBtn.style.padding='10px 15px';
+  chatBtn.style.borderRadius='6px';
+  chatBtn.style.cursor='pointer';
+
+  chatBtn.onclick=()=>{
+    const message = 'Please help me use and customize this AI photo prompt:\n\n' + item.prompt;
+    const chatUrl = 'https://chatgpt.com/?q=' + encodeURIComponent(message);
+    window.open(chatUrl,'_blank','noopener');
+  };
+
+  row.append(btn,chatBtn,status);
+  card.appendChild(row);
+}
+
   }
   else if(item.item_type==='video_upload'){
     const video=document.createElement('video');
