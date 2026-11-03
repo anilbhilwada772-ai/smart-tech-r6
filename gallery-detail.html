@@ -144,11 +144,11 @@ chatBtn.style.alignItems='center';
 chatBtn.style.gap='8px';
 chatBtn.style.fontWeight='bold';
 
-  chatBtn.onclick=()=>{
-    const message = 'item.prompt;
+ chatBtn.onclick=()=>{
+    const message = item.prompt;
     const chatUrl = 'https://chatgpt.com/?q=' + encodeURIComponent(message);
     window.open(chatUrl,'_blank','noopener');
-  };
+};
 
   row.append(btn,chatBtn,status);
   card.appendChild(row);
