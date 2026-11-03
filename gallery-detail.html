@@ -117,14 +117,23 @@ if(item.prompt){
 
   // Share to ChatGPT Button
   const chatBtn=document.createElement('button');
-  chatBtn.textContent='🤖 Share to ChatGPT';
+ chatBtn.innerHTML = `
+  <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
+       alt="ChatGPT"
+       style="width:20px;height:20px;filter:brightness(0) invert(1);">
+  <span>ChatGPT</span>
+`;
 
   chatBtn.style.background='#10a37f';
-  chatBtn.style.color='#ffffff';
-  chatBtn.style.border='none';
-  chatBtn.style.padding='10px 15px';
-  chatBtn.style.borderRadius='6px';
-  chatBtn.style.cursor='pointer';
+chatBtn.style.color='#ffffff';
+chatBtn.style.border='none';
+chatBtn.style.padding='10px 15px';
+chatBtn.style.borderRadius='6px';
+chatBtn.style.cursor='pointer';
+chatBtn.style.display='inline-flex';
+chatBtn.style.alignItems='center';
+chatBtn.style.gap='8px';
+chatBtn.style.fontWeight='bold';
 
   chatBtn.onclick=()=>{
     const message = 'Please help me use and customize this AI photo prompt:\n\n' + item.prompt;
