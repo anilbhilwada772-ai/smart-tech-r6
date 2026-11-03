@@ -430,3 +430,10 @@ a.youtube-button:active {
         margin: 3px !important;
     }
 }
+@media (max-width: 600px) {
+    .category-filter,
+    .category-buttons,
+    .filter-buttons {
+        row-gap: 16px !important;
+    }
+}
