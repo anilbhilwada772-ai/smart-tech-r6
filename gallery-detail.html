@@ -120,28 +120,17 @@ if(item.prompt){
   const chatBtn = document.createElement('button');
 
   chatBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg"
-         width="22" height="22"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="white"
-         stroke-width="1.35"
-         stroke-linecap="round"
-         stroke-linejoin="round"
-         style="display:block; flex-shrink:0; overflow:visible;">
-      <path d="M12 3.2a4.2 4.2 0 0 1 7.3 2.9 4.2 4.2 0 0 1-1.1 7.5"/>
-      <path d="M19.3 6.1a4.2 4.2 0 0 1-1.1 7.5"/>
-      <path d="M18.2 13.6a4.2 4.2 0 0 1-7.3 2.9"/>
-      <path d="M10.9 16.5a4.2 4.2 0 0 1-7.3-2.9"/>
-      <path d="M3.6 13.6a4.2 4.2 0 0 1 1.1-7.5"/>
-      <path d="M4.7 6.1A4.2 4.2 0 0 1 12 3.2"/>
-      <path d="M12 3.2v17.6"/>
-      <path d="m4.7 6.1 14.6 8.4"/>
-      <path d="m19.3 6.1-14.6 8.4"/>
-    </svg>
-    <span>ChatGPT</span>
-  `;
-
+  <img src="chatgpt-logo.png"
+       alt="ChatGPT Logo"
+       style="
+         width: 28px;
+         height: 28px;
+         object-fit: contain;
+         display: block;
+         flex-shrink: 0;
+       ">
+  <span>ChatGPT</span>
+`;
   chatBtn.style.background = '#10a37f';
   chatBtn.style.color = '#ffffff';
   chatBtn.style.border = 'none';
