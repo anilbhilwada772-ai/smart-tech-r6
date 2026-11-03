@@ -469,3 +469,11 @@ a.youtube-button:active {
         height: 55px;
     }
 }
+.header-brand img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    flex-shrink: 0;
+}
