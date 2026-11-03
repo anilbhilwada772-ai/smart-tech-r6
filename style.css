@@ -413,3 +413,20 @@ a.youtube-button:active {
         font-size: 25px;
     }
 }
+/* Mobile Category Buttons Spacing */
+@media (max-width: 600px) {
+    .category-filter,
+    .category-buttons,
+    .filter-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px !important;
+        row-gap: 12px !important;
+    }
+
+    .category-filter button,
+    .category-buttons button,
+    .filter-buttons button {
+        margin: 3px !important;
+    }
+}
