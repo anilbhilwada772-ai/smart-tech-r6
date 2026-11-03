@@ -393,3 +393,12 @@ a.youtube-button:active {
     text-decoration: none !important;
     font-weight: bold;
 }
+/* Thumbnail aur Title ke beech spacing */
+.gallery-card h3,
+.photo-card h3,
+.prompt-card h3 {
+    font-size: 15px !important;
+    margin-top: 16px !important;
+    margin-bottom: 10px !important;
+    line-height: 1.4;
+}
