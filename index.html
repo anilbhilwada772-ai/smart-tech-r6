@@ -72,16 +72,51 @@
 
 <!-- END HOMEPAGE PNG BANNER -->
 
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="tools.html">Tools</a>
-        <a href="prompts.html">Prompts</a>
-        <a href="blog.html">Blog</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-    </nav>
+<!-- SMART TECH R6 - HOME & CATEGORY MENU -->
 
-    <main>
+<div class="quick-menu-bar">
+
+    <a href="index.html" class="quick-home" aria-label="Home">
+        🏠
+    </a>
+
+    <button
+        type="button"
+        id="categoryMenuToggle"
+        class="quick-category-toggle"
+        aria-expanded="false"
+        aria-controls="categoryMenuPanel"
+    >
+        ☰
+    </button>
+
+</div>
+
+<div id="categoryMenuPanel" class="category-menu-panel" hidden>
+
+    <div class="category-filter">
+
+        <button class="category-btn" data-category="All">All</button>
+
+        <button class="category-btn" data-category="AI Photo Editing">AI Photo Editing</button>
+
+        <button class="category-btn" data-category="Couple Photos">Couple Photos</button>
+
+        <button class="category-btn" data-category="Boy Portrait">Boy Portrait</button>
+
+        <button class="category-btn" data-category="Girl Portrait">Girl Portrait</button>
+
+        <button class="category-btn" data-category="Festival Editing">Festival Editing</button>
+
+        <button class="category-btn" data-category="Trending AI Prompts">Trending AI Prompts</button>
+
+        <button class="category-btn" data-category="Other">Other</button>
+
+    </div>
+
+</div>
+
+<!-- END HOME & CATEGORY MENU -->
 
         
 <!-- SMART TECH R6 - WELCOME SECTION -->
