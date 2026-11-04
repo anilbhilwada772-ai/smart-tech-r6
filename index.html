@@ -72,6 +72,8 @@
 
 <!-- END HOMEPAGE PNG BANNER -->
 
+<main>
+
 <!-- SMART TECH R6 - HOME & CATEGORY MENU -->
 
 <div class="quick-menu-bar">
@@ -118,8 +120,7 @@
 
 <!-- END HOME & CATEGORY MENU -->
 
-        
-<!-- SMART TECH R6 - WELCOME SECTION -->
+<!-- WELCOME SECTION -->
 
 <section class="welcome-banner">
 
@@ -136,12 +137,10 @@
             Explore AI Prompts
         </a>
 
-        <a
-            href="https://www.youtube.com/@anil.bhilwada"
-            target="_blank"
-            rel="noopener"
-            class="youtube-button"
-        >
+        <a href="https://www.youtube.com/@anil.bhilwada"
+           target="_blank"
+           rel="noopener"
+           class="youtube-button">
             ▶ Visit Our YouTube Channel
         </a>
 
@@ -149,48 +148,34 @@
 
 </section>
 
-<!-- END WELCOME SECTION -->
+<!-- SEARCH BAR -->
 
- <div class="search-container">
+<div class="search-container">
+
     <input
         type="text"
         id="searchInput"
         placeholder="Search AI Photos..."
     >
-          <!-- Featured AI Photos -->
-        <section class="featured-section">
-            <h2>Featured AI Photos</h2>
-            <p>Explore our latest AI photo editing ideas and prompts.</p>
-        </section>
-       
-</div>
- <div class="category-filter">
-    <button class="category-btn" data-category="All">All</button>
-    <button class="category-btn" data-category="AI Photo Editing">AI Photo Editing</button>
-    <button class="category-btn" data-category="Couple Photos">Couple Photos</button>
-    <button class="category-btn" data-category="Boy Portrait">Boy Portrait</button>
-    <button class="category-btn" data-category="Girl Portrait">Girl Portrait</button>
-    <button class="category-btn" data-category="Festival Editing">Festival Editing</button>
-    <button class="category-btn" data-category="Trending AI Prompts">Trending AI Prompts</button>
-    <button class="category-btn" data-category="Other">Other</button>
-</div>
-        
 
+</div>
 
-<!-- SMART TECH R6 - PUBLIC GALLERY -->
+<!-- LATEST AI PHOTO PROMPTS -->
 
 <section id="publicGallery" class="public-gallery">
 
-  <div class="gallery-heading">
-    <h2>Latest AI Photo Prompts</h2>
-    <p>Explore trending AI photos and their prompts.</p>
-  </div>
+    <div class="gallery-heading">
+        <h2>Latest AI Photo Prompts</h2>
+        <p>Explore trending AI photos and their prompts.</p>
+    </div>
 
-  <div id="galleryPosts" class="gallery-posts">
-    <p>Loading gallery posts...</p>
-  </div>
+    <div id="galleryPosts" class="gallery-posts">
+        <p>Loading gallery posts...</p>
+    </div>
 
 </section>
+
+<!-- SUPABASE GALLERY SCRIPT -->
 
 <script type="module">
 import { supabase } from './supabase.js';
@@ -248,10 +233,8 @@ async function loadGalleryPosts() {
 loadGalleryPosts();
 </script>
 
-<!-- END SMART TECH R6 PUBLIC GALLERY -->
+<!-- DYNAMIC PHOTO GALLERY -->
 
-<!-- Dynamic Photo Gallery -->
- 
 <section class="gallery" id="dynamicGallery">
 
     <div class="photo-card">
@@ -292,8 +275,16 @@ loadGalleryPosts();
 <div class="load-more-container">
     <button id="loadMoreBtn">Load More Photos</button>
 </div>
-    </main>
 
+<!-- FEATURED AI PHOTOS - AT THE BOTTOM -->
+
+<section class="featured-section">
+    <h2>⭐ Featured AI Photos</h2>
+    <p>Explore our latest AI photo editing ideas and prompts.</p>
+</section>
+
+</main>
+
 <footer class="site-footer">
     <h3>Smart Tech R6</h3>
     <p>AI Photo Editing Prompts, Tools and Creative Ideas.</p>
