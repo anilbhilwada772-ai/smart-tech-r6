@@ -303,5 +303,32 @@ loadGalleryPosts();
 </footer>
 <script type="module" src="show-prompts.js"></script>
 <script type="module" src="featured.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const toggle = document.getElementById("categoryMenuToggle");
+    const panel = document.getElementById("categoryMenuPanel");
+
+    if (toggle && panel) {
+
+        toggle.addEventListener("click", function () {
+
+            const isOpen = !panel.hidden;
+
+            panel.hidden = isOpen;
+
+            toggle.setAttribute(
+                "aria-expanded",
+                String(!isOpen)
+            );
+
+        });
+
+    }
+
+});
+</script>
+
 </body>
 </html>
