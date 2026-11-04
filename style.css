@@ -593,3 +593,132 @@ a.youtube-button:active {
     }
 }
 
+/* =====================================
+   SMART TECH R6 - PUBLIC GALLERY
+===================================== */
+
+.public-gallery {
+  width: 100%;
+  max-width: 1200px;
+  margin: 35px auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+/* Heading */
+
+.public-gallery .gallery-heading {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.public-gallery .gallery-heading h2 {
+  color: #f07818;
+  font-size: 27px;
+  font-weight: 800;
+  margin: 0 0 8px;
+}
+
+.public-gallery .gallery-heading p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Gallery Grid - Desktop: 3 Photos */
+
+#publicGallery .gallery-posts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* Gallery Card */
+
+#publicGallery .gallery-card {
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 13px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+#publicGallery .gallery-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Image - Original Ratio, No Cropping */
+
+#publicGallery .gallery-card img {
+  display: block;
+  width: 100%;
+  height: auto !important;
+  max-width: 100%;
+  object-fit: contain !important;
+  object-position: center;
+  background: #f8f8f8;
+}
+
+/* Title */
+
+#publicGallery .gallery-card h3 {
+  padding: 12px 12px 5px;
+  margin: 0;
+  color: #172b4d;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Description */
+
+#publicGallery .gallery-card p {
+  padding: 0 12px 13px;
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Tablet & Mobile: 1 Photo Per Row */
+
+@media (max-width: 768px) {
+  .public-gallery {
+    padding: 14px;
+    margin: 25px auto;
+  }
+
+  #publicGallery .gallery-posts {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .public-gallery .gallery-heading h2 {
+    font-size: 22px;
+  }
+}
+
+/* Small Mobile */
+
+@media (max-width: 380px) {
+  #publicGallery .gallery-posts {
+    gap: 12px;
+  }
+
+  #publicGallery .gallery-card h3 {
+    font-size: 13px;
+    padding: 9px 9px 4px;
+  }
+
+  #publicGallery .gallery-card p {
+    font-size: 12px;
+    padding: 0 9px 10px;
+  }
+}
+
