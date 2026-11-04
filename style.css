@@ -853,3 +853,147 @@ a.youtube-button:active {
   }
 }
 
+/* =====================================
+   SMART TECH R6 - HOMEPAGE DESIGN
+===================================== */
+
+/* Preserve Existing Header Line */
+
+.site-header {
+    border-bottom: 6px solid #f07818;
+}
+
+/* PNG Image Section */
+
+.homepage-promo-image {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 18px;
+    box-sizing: border-box;
+    background: #fffaf6;
+    text-align: center;
+    border-bottom: 5px solid #f07818;
+}
+
+.homepage-promo-image img {
+    display: block;
+    width: 100%;
+    max-width: 850px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    filter: none;
+}
+
+/* Welcome Section - No Orange Box */
+
+.welcome-banner {
+    width: 100%;
+    max-width: 1000px;
+    margin: 25px auto;
+    padding: 25px 18px;
+    box-sizing: border-box;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    text-align: center;
+}
+
+/* Welcome Heading */
+
+.welcome-banner h1 {
+    color: #e87518 !important;
+    font-size: 30px;
+    font-weight: 800;
+    margin: 0 0 15px;
+}
+
+/* Welcome Description */
+
+.welcome-banner p {
+    color: #555555 !important;
+    font-size: 17px;
+    line-height: 1.7;
+    margin: 0 auto 22px;
+    max-width: 750px;
+}
+
+/* Welcome Buttons */
+
+.welcome-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.welcome-buttons a {
+    display: inline-block;
+    padding: 13px 23px;
+    border-radius: 9px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none !important;
+    transition: 0.2s ease;
+}
+
+/* Explore Button */
+
+.welcome-buttons .explore-button {
+    background: #ffffff;
+    color: #e87518 !important;
+    border: 2px solid #f07818;
+}
+
+/* YouTube Button */
+
+.welcome-buttons .youtube-button {
+    background: #ed0000 !important;
+    color: #ffffff !important;
+    border: 2px solid #ed0000;
+}
+
+/* Mobile Design */
+
+@media (max-width: 600px) {
+
+    .homepage-promo-image {
+        padding: 22px 14px;
+    }
+
+    .homepage-promo-image img {
+        max-width: 100%;
+    }
+
+    .welcome-banner {
+        margin: 18px auto;
+        padding: 20px 15px;
+    }
+
+    .welcome-banner h1 {
+        font-size: 24px;
+    }
+
+    .welcome-banner p {
+        font-size: 15px;
+    }
+
+    .welcome-buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .welcome-buttons a {
+        width: 100%;
+        max-width: 340px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+}
+
