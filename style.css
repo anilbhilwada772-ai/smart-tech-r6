@@ -1089,3 +1089,122 @@ a.youtube-button:active {
     }
     }
 
+/* =====================================
+   SMART TECH R6 - RSP STYLE MENU BAR
+===================================== */
+
+/* Reduce PNG Banner Gap */
+
+.homepage-promo-image {
+    margin: 0 auto !important;
+    padding: 5px 10px !important;
+    border-bottom: 6px solid #f07818 !important;
+    box-sizing: border-box !important;
+}
+
+/* Orange Navigation Bar */
+
+.quick-menu-bar {
+    width: 100%;
+    height: 55px;
+    background: #ff7000;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* Home Icon */
+
+.quick-home {
+    width: 65px;
+    min-width: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #d94700;
+    color: white !important;
+    font-size: 25px;
+    text-decoration: none !important;
+}
+
+/* Category Hamburger Icon */
+
+.quick-category-toggle {
+    width: 65px;
+    height: 55px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+}
+
+/* Category Dropdown */
+
+.category-menu-panel {
+    width: 100%;
+    background: #ffffff;
+    padding: 12px 15px;
+    box-sizing: border-box;
+    border-bottom: 3px solid #f07818;
+}
+
+.category-menu-panel[hidden] {
+    display: none !important;
+}
+
+/* Categories One By One */
+
+.category-menu-panel .category-filter {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 9px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.category-menu-panel .category-btn {
+    display: block !important;
+    width: 100% !important;
+    padding: 12px 15px !important;
+    text-align: left !important;
+    background: #fffaf6 !important;
+    color: #e87518 !important;
+    border: 1px solid #f07818 !important;
+    border-radius: 7px !important;
+    font-size: 15px !important;
+    box-sizing: border-box !important;
+}
+
+/* Smaller Gap Around Banner */
+
+.homepage-promo-image img {
+    margin: 0 auto !important;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .quick-menu-bar {
+        height: 52px;
+    }
+
+    .quick-home {
+        width: 58px;
+        min-width: 58px;
+    }
+
+    .quick-category-toggle {
+        height: 52px;
+        width: 58px;
+    }
+
+    .category-menu-panel {
+        padding: 10px 12px;
+    }
+}
+
