@@ -1308,3 +1308,26 @@ body.dark-theme .site-footer {
     background: #1e1e1e;
     color: white;
 }
+
+/* MOBILE FULL WIDTH ORANGE MENU */
+
+.quick-menu-bar {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 0 !important;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+.quick-home,
+.quick-category-toggle,
+.quick-theme-toggle {
+    flex-shrink: 0;
+}
