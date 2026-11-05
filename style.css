@@ -1331,20 +1331,17 @@ body {
 .quick-theme-toggle {
     flex-shrink: 0;
 }
-/* DARK THEME - THUMBNAIL TITLE VISIBILITY */
 
-body.dark-theme .gallery-card h3,
-body.dark-theme .photo-card h3,
-body.dark-theme .gallery-post h3,
-body.dark-theme .gallery-card a,
-body.dark-theme .photo-card a {
+/* FIX SUPABASE GALLERY TITLE IN DARK MODE */
+
+body.dark-theme #galleryPosts .gallery-card a h3 {
     color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
     opacity: 1 !important;
     visibility: visible !important;
-    text-shadow: none !important;
 }
 
-body.dark-theme .gallery-card p,
-body.dark-theme .photo-card p {
-    color: #dddddd !important;
+body.dark-theme #galleryPosts .gallery-card a p {
+    color: #e0e0e0 !important;
+    -webkit-text-fill-color: #e0e0e0 !important;
 }
