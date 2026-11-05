@@ -1371,3 +1371,51 @@ body.dark-theme #galleryPosts .gallery-card a p {
     }
 
 }
+/* SMART TECH R6 - MOBILE HOMEPAGE SPACING FIX */
+
+@media (max-width: 768px) {
+
+    /* Remove only bottom banner line */
+    .homepage-promo-image {
+        border-bottom: none !important;
+        box-shadow: none !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    /* Keep banner top line */
+    .homepage-promo-image img {
+        display: block;
+        margin-bottom: 0 !important;
+    }
+
+    /* Move orange menu upward */
+    .quick-menu-bar {
+        margin-top: 0 !important;
+    }
+
+    /* Move Welcome section upward */
+    .welcome-banner {
+        margin-top: 0 !important;
+        padding-top: 10px !important;
+        padding-bottom: 0 !important;
+    }
+
+    .welcome-banner h1 {
+        margin-top: 0 !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* YouTube button spacing */
+    .welcome-buttons {
+        margin-top: 5px !important;
+        margin-bottom: 5px !important;
+        gap: 8px !important;
+    }
+
+    /* Search bar spacing */
+    .search-container {
+        margin-top: 5px !important;
+        margin-bottom: 8px !important;
+    }
+}
