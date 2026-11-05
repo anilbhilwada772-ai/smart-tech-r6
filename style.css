@@ -1447,7 +1447,7 @@ body.dark-theme #galleryPosts .gallery-card a p {
 @media (max-width: 768px) {
 
     .quick-menu-bar {
-        margin-top: -45px !important;
+        margin-top: -20px !important;
         position: relative !important;
         z-index: 5 !important;
     }
