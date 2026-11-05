@@ -1442,3 +1442,28 @@ body.dark-theme #galleryPosts .gallery-card a p {
 .quick-menu-bar {
     margin-top: 0 !important;
 }
+/* REMOVE GAP BETWEEN BANNER AND ORANGE MENU */
+
+@media (max-width: 768px) {
+
+    main {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .homepage-promo-image {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .quick-menu-bar {
+        margin-top: 0 !important;
+        position: relative;
+        top: 0;
+    }
+
+    main > .quick-menu-bar {
+        margin-block-start: 0 !important;
+    }
+
+}
