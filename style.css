@@ -1440,7 +1440,7 @@ body.dark-theme #galleryPosts .gallery-card a p {
 }
 
 .quick-menu-bar {
-    margin-top: 0 !important;
+      margin-top: -20px !important;
 }
 /* FINAL MOBILE BANNER TO MENU POSITION FIX */
 
