@@ -1419,3 +1419,26 @@ body.dark-theme #galleryPosts .gallery-card a p {
         margin-bottom: 8px !important;
     }
 }
+/* REMOVE EMPTY SPACE BELOW PNG BANNER */
+
+.homepage-promo-image {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    line-height: 0 !important;
+}
+
+.homepage-promo-image img {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.quick-menu-bar {
+    margin-top: 0 !important;
+}
