@@ -87,6 +87,73 @@ function addText(parent, tag, value, className=''){
   return el;
 }
 
+// Dynamic SEO helper
+function setMeta(attribute, name, content){
+  let tag=document.querySelector(`meta[${attribute}="${name}"]`);
+
+  if(!tag){
+    tag=document.createElement('meta');
+    tag.setAttribute(attribute,name);
+    document.head.appendChild(tag);
+  }
+
+  tag.setAttribute('content',content);
+}
+
+function setCanonical(url){
+  let link=document.querySelector('link[rel="canonical"]');
+
+  if(!link){
+    link=document.createElement('link');
+    link.rel='canonical';
+    document.head.appendChild(link);
+  }
+
+  link.href=url;
+}
+
+function updateSEO(postData, items, postId){
+  const title=postData.title || 'AI Gallery Post';
+  const description=(postData.description || 'Explore AI photos, prompts and videos on Smart Tech R6.')
+    .replace(/\s+/g,' ')
+    .slice(0,155);
+
+  const pageUrl=new URL(location.href);
+  pageUrl.search='';
+  pageUrl.searchParams.set('id',postId);
+  pageUrl.hash='';
+
+  const canonicalUrl=pageUrl.href;
+
+  const firstPhoto=(items || []).find(item =>
+    item.item_type==='photo' && item.media_url
+  );
+
+  const shareImage=firstPhoto
+    ? firstPhoto.media_url
+    : 'https://anilbhilwada772-ai.github.io/smart-tech-r6/smart-tech-r6-logo.png';
+
+  document.title=title+' | Smart Tech R6';
+
+  setMeta('name','description',description);
+  setMeta('name','robots','index, follow');
+
+  setCanonical(canonicalUrl);
+
+  setMeta('property','og:type','article');
+  setMeta('property','og:site_name','Smart Tech R6');
+  setMeta('property','og:title',title+' | Smart Tech R6');
+  setMeta('property','og:description',description);
+  setMeta('property','og:url',canonicalUrl);
+  setMeta('property','og:image',shareImage);
+  setMeta('property','og:image:alt',title);
+
+  setMeta('name','twitter:card','summary_large_image');
+  setMeta('name','twitter:title',title+' | Smart Tech R6');
+  setMeta('name','twitter:description',description);
+  setMeta('name','twitter:image',shareImage);
+}
+
 function youtubeId(url){
   try{
     const u=new URL(url);
@@ -116,71 +183,67 @@ function renderItem(item){
   if(item.item_type==='photo'){
     const img=document.createElement('img');
     img.src=item.media_url;
-    img.alt='AI Photo';
+    img.alt='AI Photo Editing - Smart Tech R6';
     img.loading='lazy';
     card.appendChild(img);
 
-    
-addText(card,'h3','AI Photo Prompt');
+    addText(card,'h3','AI Photo Prompt');
 
-if(item.prompt){
-  const prompt=addText(card,'div',item.prompt,'prompt');
+    if(item.prompt){
+      addText(card,'div',item.prompt,'prompt');
 
-  const row=document.createElement('div');
-  row.style.marginTop='12px';
-  row.style.display='flex';
-  row.style.flexWrap='wrap';
-  row.style.gap='10px';
+      const row=document.createElement('div');
+      row.style.marginTop='12px';
+      row.style.display='flex';
+      row.style.flexWrap='wrap';
+      row.style.gap='10px';
 
-  // Copy Prompt Button
-  const btn=document.createElement('button');
-  btn.textContent='📋 Copy Prompt';
+      // Copy Prompt Button
+      const btn=document.createElement('button');
+      btn.textContent='📋 Copy Prompt';
 
-  const status=document.createElement('span');
-  status.className='copy-status';
+      const status=document.createElement('span');
+      status.className='copy-status';
 
-  btn.onclick=()=>copyPrompt(item.prompt,status);
+      btn.onclick=()=>copyPrompt(item.prompt,status);
 
-  
-  // Share to ChatGPT Button
-  const chatBtn = document.createElement('button');
+      // Share to ChatGPT Button
+      const chatBtn=document.createElement('button');
 
-  chatBtn.innerHTML = `
-  <img src="chatgpt-logo.png"
-       alt="ChatGPT Logo"
-       style="
-         width: 28px;
-         height: 28px;
-         object-fit: contain;
-         display: block;
-         flex-shrink: 0;
-       ">
-  <span>ChatGPT</span>
-`;
-  chatBtn.style.background = '#10a37f';
-  chatBtn.style.color = '#ffffff';
-  chatBtn.style.border = 'none';
-  chatBtn.style.padding = '10px 15px';
-  chatBtn.style.borderRadius = '6px';
-  chatBtn.style.cursor = 'pointer';
-  chatBtn.style.display = 'inline-flex';
-  chatBtn.style.alignItems = 'center';
-  chatBtn.style.justifyContent = 'center';
-  chatBtn.style.gap = '8px';
-  chatBtn.style.fontWeight = 'bold';
-  chatBtn.style.overflow = 'visible';
+      chatBtn.innerHTML=`
+        <img src="chatgpt-logo.png"
+             alt="ChatGPT Logo"
+             style="
+               width:28px;
+               height:28px;
+               object-fit:contain;
+               display:block;
+               flex-shrink:0;
+             ">
+        <span>ChatGPT</span>
+      `;
 
-  chatBtn.onclick = () => {
-    const message = item.prompt;
-    const chatUrl = 'https://chatgpt.com/?q=' + encodeURIComponent(message);
-    window.open(chatUrl, '_blank', 'noopener');
-  };
+      chatBtn.style.background='#10a37f';
+      chatBtn.style.color='#ffffff';
+      chatBtn.style.border='none';
+      chatBtn.style.padding='10px 15px';
+      chatBtn.style.borderRadius='6px';
+      chatBtn.style.cursor='pointer';
+      chatBtn.style.display='inline-flex';
+      chatBtn.style.alignItems='center';
+      chatBtn.style.justifyContent='center';
+      chatBtn.style.gap='8px';
+      chatBtn.style.fontWeight='bold';
+      chatBtn.style.overflow='visible';
 
-  row.append(btn, chatBtn, status);
+      chatBtn.onclick=()=>{
+        const chatUrl='https://chatgpt.com/?q='+encodeURIComponent(item.prompt);
+        window.open(chatUrl,'_blank','noopener');
+      };
 
-  card.appendChild(row);
-}
-
+      row.append(btn,chatBtn,status);
+      card.appendChild(row);
+    }
   }
   else if(item.item_type==='video_upload'){
     const video=document.createElement('video');
@@ -191,6 +254,7 @@ if(item.prompt){
   }
   else if(item.item_type==='youtube'){
     const id=youtubeId(item.media_url);
+
     if(id){
       const frame=document.createElement('iframe');
       frame.src='https://www.youtube.com/embed/'+encodeURIComponent(id);
@@ -232,6 +296,7 @@ async function loadPost(){
       .maybeSingle();
 
     if(postError) throw postError;
+
     if(!postData){
       message.textContent='Post not found or not published.';
       return;
@@ -245,7 +310,9 @@ async function loadPost(){
 
     if(itemError) throw itemError;
 
-    document.title=postData.title+' | Smart Tech R6';
+    // Update SEO using this post's information
+    updateSEO(postData,items,id);
+
     document.getElementById('postTitle').textContent=postData.title;
     document.getElementById('category').textContent=postData.category||'AI Gallery';
     document.getElementById('postDescription').textContent=postData.description||'';
