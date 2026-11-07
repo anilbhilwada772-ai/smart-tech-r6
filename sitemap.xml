@@ -1,42 +1,21 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <url>
-    <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/</loc>
-    
-  </url>
-  <url>
-    <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/tools.html</loc>
-    
-  </url>
-  <url>
-    <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompts.html</loc>
-    
-  </url>
-  <url>
-    <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/blog.html</loc>
-    
-  </url>
-  <url>
-    <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/about.html</loc>
-    
-  </url>
-  <url>
-    <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/contact.html</loc>
-    
-  </url>
-  <url>
-    <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompt1.html</loc>
-    
-  </url>
-  <url>
-    <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompt2.html</loc>
-    
-  </url>
-  <url>
-    <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompt3.html</loc>
-    
-  </url>
+  <!-- Main Pages -->
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/tools.html</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompts.html</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/blog.html</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/about.html</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/contact.html</loc></url>
+
+  <!-- Old Prompt Pages -->
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompt1.html</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompt2.html</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompt3.html</loc></url>
+
+  <!-- Existing Prompt Detail Pages -->
   <url>
     <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompt-detail.html?id=97a7f3a9-f2a2-4bd0-8979-89a328e94e7a</loc>
     <lastmod>2026-10-31</lastmod>
@@ -49,8 +28,22 @@
     <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/prompt-detail.html?id=85b767d1-4659-481e-b13c-bdcc0a710723</loc>
     <lastmod>2026-11-01</lastmod>
   </url>
+
+  <!-- Existing Blog Detail Page -->
   <url>
     <loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/blog-detail.html?id=1aee0319-8a6c-47f5-93cb-144c2853426e</loc>
     <lastmod>2026-11-01</lastmod>
   </url>
+
+  <!-- Published Gallery Detail Pages -->
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/gallery-detail.html?id=7ae84fa3-2805-4e09-af6a-e3a5a89511ea</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/gallery-detail.html?id=e693ac63-6a95-47e6-9295-bfdd729b6683</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/gallery-detail.html?id=81ce7173-de50-44bf-8024-d1bc607e1713</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/gallery-detail.html?id=6ff63bac-ef5c-4146-8aea-0316544c6722</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/gallery-detail.html?id=3fbd3b3b-2f84-4b41-ad7b-47a41d6088ef</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/gallery-detail.html?id=8ae3a31b-c50a-479a-a17e-53edbf120f31</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/gallery-detail.html?id=5ba97057-7a16-422c-b5e1-2652b9880d7a</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/gallery-detail.html?id=e4626638-b575-455e-9988-725d419168dc</loc></url>
+  <url><loc>https://anilbhilwada772-ai.github.io/smart-tech-r6/gallery-detail.html?id=4fee350f-c258-4ab0-947f-7a687174646d</loc></url>
+
 </urlset>
