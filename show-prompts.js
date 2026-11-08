@@ -61,18 +61,31 @@ function renderPrompts() {
     card.className = 'prompt-card';
     card.dataset.category = item.category || 'Other';
 
+    const postUrl = `prompt-detail.html?id=${encodeURIComponent(item.id)}`;
+
+    const imageLink = document.createElement('a');
+    imageLink.href = postUrl;
+
     const image = document.createElement('img');
     image.src = item.image_url;
     image.alt = item.title;
 
+    imageLink.appendChild(image);
+
     const heading = document.createElement('h3');
-    heading.textContent = item.title;
+    const titleLink = document.createElement('a');
+    titleLink.href = postUrl;
+    titleLink.textContent = item.title;
+    titleLink.style.color = 'inherit';
+    titleLink.style.textDecoration = 'none';
+
+    heading.appendChild(titleLink);
 
     const link = document.createElement('a');
-    link.href = `prompt-detail.html?id=${encodeURIComponent(item.id)}`;
+    link.href = postUrl;
     link.textContent = 'View Prompt';
 
-    card.append(image, heading, link);
+    card.append(imageLink, heading, link);
     gallery.appendChild(card);
   });
 
