@@ -1,74 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>AI Editing Tutorials, Tips & Guides | Smart Tech R6</title>
 
-    <meta name="description" content="Read AI photo editing tutorials, AI tools guides, trending AI editing tips and creative ideas in Hindi and English on the Smart Tech R6 blog.">
-
+    <meta name="description" content="Read AI photo editing tutorials, AI tools guides, trending AI editing tips and creative ideas in Hindi and English on Smart Tech R6.">
     <meta name="keywords" content="AI editing tutorials, AI photo editing tips, AI tools guides, AI editing ideas, photo editing tutorials, Smart Tech R6 blog">
-
     <meta name="robots" content="index, follow">
-
     <meta name="author" content="Smart Tech R6">
 
     <link rel="canonical" href="https://anilbhilwada772-ai.github.io/smart-tech-r6/blog.html">
-
     <link rel="icon" type="image/png" href="smart-tech-r6-logo.png">
+    <link rel="stylesheet" href="style.css">
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Smart Tech R6">
     <meta property="og:title" content="AI Editing Tutorials & Tips | Smart Tech R6">
     <meta property="og:description" content="Explore AI photo editing tutorials, AI tools guides and creative tips.">
     <meta property="og:url" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/blog.html">
-    <meta property="og:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/images/photo1.png">
+    <meta property="og:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/photo1.png">
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="AI Editing Tutorials & Tips | Smart Tech R6">
     <meta name="twitter:description" content="Read AI editing tutorials, tips and creative guides.">
-    <meta name="twitter:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/images/photo1.png">
-
-    <link rel="stylesheet" href="style.css">
+    <meta name="twitter:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/photo1.png">
 
     <style>
-        .blog-container { max-width: 1100px; margin: 30px auto; padding: 20px; }
-        .blog-controls { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin: 24px 0; }
-        .blog-controls input, .blog-controls select { width: 100%; padding: 13px 15px; border: 1px solid #cbdaf0; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 22px; }
-        .blog-card { background: white; padding: 15px; border-radius: 14px; box-shadow: 0 4px 15px rgba(30,80,140,.12); }
-        .blog-card img { width: 100%; height: 190px; object-fit: cover; border-radius: 10px; }
-        .blog-card a { color: #1769e0; font-weight: bold; }
-        .blog-category { display: inline-block; background: #eaf2ff; color: #1769e0; padding: 5px 9px; border-radius: 20px; font-size: 12px; margin: 8px 0; }
-        @media(max-width:600px) { .blog-controls { grid-template-columns: 1fr; } }
+        .blog-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .blog-intro {
+            text-align: center;
+            margin: 25px auto 35px;
+            max-width: 850px;
+        }
+
+        .blog-intro h1 {
+            color: #1769e0;
+            line-height: 1.35;
+        }
+
+        .blog-controls {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin: 25px 0;
+        }
+
+        .blog-controls input,
+        .blog-controls select {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #cbdaf0;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background: white;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 22px;
+        }
+
+        .blog-card {
+            background: white;
+            padding: 15px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(30,80,140,.12);
+            overflow: hidden;
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 7px 20px rgba(30,80,140,.18);
+        }
+
+        .blog-image-link {
+            display: block;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            transition: transform .3s ease;
+        }
+
+        .blog-card:hover img {
+            transform: scale(1.04);
+        }
+
+        .blog-card h2 {
+            font-size: 20px;
+            line-height: 1.4;
+            margin: 10px 0;
+        }
+
+        .blog-card h2 a {
+            color: #222;
+            text-decoration: none;
+        }
+
+        .blog-card h2 a:hover {
+            color: #1769e0;
+        }
+
+        .blog-card p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .blog-category {
+            display: inline-block;
+            background: #eaf2ff;
+            color: #1769e0;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 10px 0 4px;
+        }
+
+        .blog-date {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .read-more {
+            display: inline-block;
+            background: #1769e0;
+            color: white !important;
+            text-decoration: none;
+            padding: 10px 17px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .blog-message {
+            text-align: center;
+            padding: 25px;
+            background: #f3f7ff;
+            border-radius: 12px;
+            color: #444;
+            grid-column: 1 / -1;
+        }
+
+        .blog-info {
+            margin-top: 40px;
+            line-height: 1.8;
+        }
+
+        .blog-footer {
+            text-align: center;
+            padding: 25px 15px;
+            margin-top: 35px;
+        }
+
+        .blog-footer a {
+            color: inherit;
+            text-decoration: none;
+            margin: 5px 8px;
+            display: inline-block;
+        }
+
+        .blog-footer a:hover {
+            color: #1769e0;
+            text-decoration: underline;
+        }
+
+        @media(max-width:600px) {
+            .blog-container {
+                padding: 14px;
+                margin: 15px auto;
+            }
+
+            .blog-controls {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 17px;
+            }
+
+            .blog-card img {
+                height: 210px;
+            }
+
+            .blog-intro h1 {
+                font-size: 26px;
+            }
+        }
     </style>
 </head>
 
 <body>
-  <main class="blog-container">
+
+<main class="blog-container">
 
     <a href="index.html">← Back to Home</a>
 
-    <h1>AI Photo & Video Editing Blog – Smart Tech R6</h1>
+    <section class="blog-intro">
+        <h1>AI Photo & Video Editing Blog – Smart Tech R6</h1>
 
-    <p>
-        Explore the latest AI photo editing tutorials, AI video editing
-        guides, useful AI tools, creative prompts and technology tips.
-        Learn how to create amazing AI images and videos with easy
-        step-by-step tutorials in Hindi and English.
-    </p>
+        <p>
+            Explore the latest AI photo editing tutorials, AI video editing
+            guides, useful AI tools, creative prompts and technology tips.
+            Learn how to create amazing AI images and videos with easy
+            step-by-step tutorials in Hindi and English.
+        </p>
+    </section>
 
     <section>
         <h2>Latest AI Editing Tutorials and Tips</h2>
         <p>
             Discover helpful guides about AI photo editing, trending
             AI video effects, image generation, photo enhancement and
-            the latest AI editing tools. Our tutorials help beginners
-            learn AI editing techniques and create better photos and videos.
+            the latest AI editing tools.
         </p>
     </section>
 
@@ -77,7 +236,7 @@
         <input
             id="blogSearch"
             type="search"
-            placeholder="Search blogs by title..."
+            placeholder="Search blogs by title or description..."
             aria-label="Search blogs"
         >
 
@@ -92,9 +251,13 @@
 
     </div>
 
-    <div class="blog-grid" id="blogList">Loading Blogs...</div>
+    <h2>Latest Blog Posts</h2>
 
-    <section>
+    <div class="blog-grid" id="blogList">
+        <p class="blog-message">Loading Blogs...</p>
+    </div>
+
+    <section class="blog-info">
         <h2>What You Will Learn</h2>
 
         <ul>
@@ -106,74 +269,183 @@
         </ul>
     </section>
 
-    <section>
+    <section class="blog-info">
         <h2>Explore More on Smart Tech R6</h2>
+
         <p>
             <a href="prompts.html">Explore AI Photo Editing Prompts</a>
         </p>
+
         <p>
             <a href="tools.html">Discover AI Tools</a>
         </p>
+
         <p>
             <a href="index.html">Visit Smart Tech R6 Homepage</a>
         </p>
     </section>
 
 </main>
-  <script type="module">
+
+<footer class="site-footer blog-footer">
+    <h3>Smart Tech R6</h3>
+    <p>AI Photo Editing Prompts, Tools and Creative Ideas.</p>
+
+    <div>
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="disclaimer.html">Disclaimer</a>
+    </div>
+
+    <p>
+        Email:
+        <a href="mailto:smarttechr6business@gmail.com">
+            smarttechr6business@gmail.com
+        </a>
+    </p>
+
+    <p>© 2026 Smart Tech R6. All Rights Reserved.</p>
+</footer>
+
+<script type="module">
     import { supabase } from './supabase.js';
+
     const blogList = document.getElementById('blogList');
     const search = document.getElementById('blogSearch');
     const filter = document.getElementById('categoryFilter');
+
     let allBlogs = [];
 
     function renderBlogs() {
-      const query = search.value.trim().toLowerCase();
-      const category = filter.value;
-      const results = allBlogs.filter(post => {
-        const matchesText = (post.title || '').toLowerCase().includes(query);
-        const matchesCategory = category === 'All' || (post.category || 'Other') === category;
-        return matchesText && matchesCategory;
-      });
-      blogList.innerHTML = '';
-      if (!results.length) {
-        blogList.textContent = 'No matching blogs found.';
-        return;
-      }
-      results.forEach(post => {
-        const card = document.createElement('article');
-        card.className = 'blog-card';
-        if (post.image_url) {
-          const img = document.createElement('img');
-          img.src = post.image_url;
-          img.alt = post.title;
-          card.appendChild(img);
+
+        const query = search.value.trim().toLowerCase();
+        const category = filter.value;
+
+        const results = allBlogs.filter(post => {
+
+            const title = (post.title || '').toLowerCase();
+            const description = (post.description || '').toLowerCase();
+
+            const matchesText =
+                title.includes(query) || description.includes(query);
+
+            const matchesCategory =
+                category === 'All' ||
+                (post.category || 'Other') === category;
+
+            return matchesText && matchesCategory;
+        });
+
+        blogList.innerHTML = '';
+
+        if (!results.length) {
+            blogList.innerHTML =
+                '<p class="blog-message">No matching blogs found. Please try another search.</p>';
+            return;
         }
-        const categoryLabel = document.createElement('span');
-        categoryLabel.className = 'blog-category';
-        categoryLabel.textContent = post.category || 'Other';
-        const heading = document.createElement('h2');
-        heading.textContent = post.title;
-        const description = document.createElement('p');
-        description.textContent = post.description || '';
-        const link = document.createElement('a');
-        link.href = `blog-detail.html?id=${encodeURIComponent(post.id)}`;
-        link.textContent = 'Read More';
-        card.append(categoryLabel, heading, description, link);
-        blogList.appendChild(card);
-      });
+
+        results.forEach(post => {
+
+            const card = document.createElement('article');
+            card.className = 'blog-card';
+
+            const detailUrl =
+                `blog-detail.html?id=${encodeURIComponent(post.id)}`;
+
+            if (post.image_url) {
+
+                const imageLink = document.createElement('a');
+                imageLink.href = detailUrl;
+                imageLink.className = 'blog-image-link';
+
+                const img = document.createElement('img');
+                img.src = post.image_url;
+                img.alt = post.title || 'Smart Tech R6 Blog Image';
+                img.loading = 'lazy';
+
+                img.onerror = function () {
+                    imageLink.remove();
+                };
+
+                imageLink.appendChild(img);
+                card.appendChild(imageLink);
+            }
+
+            const categoryLabel = document.createElement('span');
+            categoryLabel.className = 'blog-category';
+            categoryLabel.textContent = post.category || 'Other';
+
+            const heading = document.createElement('h2');
+            const titleLink = document.createElement('a');
+
+            titleLink.href = detailUrl;
+            titleLink.textContent = post.title || 'Untitled Blog';
+
+            heading.appendChild(titleLink);
+
+            const description = document.createElement('p');
+            description.textContent = post.description || '';
+
+            const date = document.createElement('p');
+            date.className = 'blog-date';
+
+            if (post.created_at) {
+                const parsedDate = new Date(post.created_at);
+
+                if (!isNaN(parsedDate.getTime())) {
+                    date.textContent = parsedDate.toLocaleDateString(
+                        'en-IN',
+                        {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric'
+                        }
+                    );
+                }
+            }
+
+            const link = document.createElement('a');
+            link.href = detailUrl;
+            link.className = 'read-more';
+            link.textContent = 'Read More';
+
+            card.append(
+                categoryLabel,
+                heading,
+                description,
+                date,
+                link
+            );
+
+            blogList.appendChild(card);
+        });
     }
 
     search.addEventListener('input', renderBlogs);
     filter.addEventListener('change', renderBlogs);
-    const { data, error } = await supabase
-      .from('blog_posts').select('*').order('created_at', { ascending: false });
-    if (error) {
-      blogList.textContent = 'Unable to load blogs: ' + error.message;
-    } else {
-      allBlogs = data || [];
-      renderBlogs();
+
+    async function loadBlogs() {
+
+        const { data, error } = await supabase
+            .from('blog_posts')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('Blog loading error:', error);
+            blogList.innerHTML =
+                '<p class="blog-message">Unable to load blogs. Please try again later.</p>';
+            return;
+        }
+
+        allBlogs = data || [];
+        renderBlogs();
     }
-  </script>
+
+    loadBlogs();
+</script>
+
 </body>
 </html>
