@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,15 +22,89 @@
     <meta property="og:title" content="Contact Smart Tech R6 – Get in Touch">
     <meta property="og:description" content="Get in touch with Smart Tech R6 for questions, feedback and support.">
     <meta property="og:url" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/contact.html">
-    <meta property="og:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/images/photo1.png">
+    <meta property="og:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/photo1.png">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Contact Smart Tech R6">
     <meta name="twitter:description" content="Contact us for questions, suggestions and support.">
-    <meta name="twitter:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/images/photo1.png">
+    <meta name="twitter:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/photo1.png">
 
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        .contact-container {
+            max-width: 650px;
+            margin: 30px auto;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+
+        .contact-container h2 {
+            text-align: center;
+            color: #1769d2;
+        }
+
+        .contact-container label {
+            display: block;
+            margin: 15px 0 7px;
+            font-weight: 600;
+        }
+
+        .contact-container input,
+        .contact-container textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d5dce5;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .contact-container textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .contact-container button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            background: #1769d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .contact-container button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #formMessage {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .contact-email {
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        @media(max-width:600px) {
+            .contact-container {
+                margin: 20px 12px;
+                padding: 18px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
 <header>
@@ -45,16 +118,63 @@
     <a href="prompts.html">Prompts</a>
     <a href="blog.html">Blog</a>
     <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
 </nav>
 
 <main>
     <h1>Contact Us</h1>
-    <p>Have a question or suggestion? Contact Smart Tech R6.</p>
 
-    <div class="prompt-box">
+    <p style="text-align:center;">
+        Have a question, suggestion or feedback?
+        Send us a message.
+    </p>
+
+    <div class="contact-container">
+
         <h2>Get in Touch</h2>
-        <p>For business enquiries and suggestions, contact us.</p>
-        <p>For business enquiries and suggestions, please use our contact options.</p>
+
+        <p class="contact-email">
+            Email:
+            <a href="mailto:smarttechr6business@gmail.com">
+                smarttechr6business@gmail.com
+            </a>
+        </p>
+
+        <form id="contactForm"
+              action="https://formsubmit.co/ajax/smarttechr6business@gmail.com"
+              method="POST">
+
+            <input type="hidden" name="_subject"
+                   value="New Contact Message - Smart Tech R6">
+
+            <input type="hidden" name="_captcha" value="false">
+
+            <input type="hidden" name="_template" value="table">
+
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name"
+                   placeholder="Enter your name" required>
+
+            <label for="email">Your Email</label>
+            <input type="email" id="email" name="email"
+                   placeholder="Enter your email" required>
+
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject"
+                   placeholder="Enter message subject" required>
+
+            <label for="message">Your Message</label>
+            <textarea id="message" name="message"
+                      placeholder="Write your message here..."
+                      required></textarea>
+
+            <button type="submit" id="sendButton">
+                Send Message
+            </button>
+
+            <p id="formMessage" aria-live="polite"></p>
+
+        </form>
     </div>
 </main>
 
@@ -62,6 +182,53 @@
     <h3>Smart Tech R6</h3>
     <p>© 2026 Smart Tech R6. All Rights Reserved.</p>
 </footer>
+
+<script>
+const contactForm = document.getElementById('contactForm');
+const sendButton = document.getElementById('sendButton');
+const formMessage = document.getElementById('formMessage');
+
+contactForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    sendButton.disabled = true;
+    sendButton.textContent = 'Sending...';
+    formMessage.textContent = '';
+
+    try {
+        const response = await fetch(contactForm.action, {
+            method: 'POST',
+            body: JSON.stringify(
+                Object.fromEntries(new FormData(contactForm))
+            ),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            formMessage.style.color = 'green';
+            formMessage.textContent =
+                'Your message has been sent successfully!';
+
+            contactForm.reset();
+        } else {
+            throw new Error('Message could not be sent.');
+        }
+
+    } catch (error) {
+        formMessage.style.color = 'red';
+        formMessage.textContent =
+            'Unable to send message. Please try again or email us directly.';
+    }
+
+    sendButton.disabled = false;
+    sendButton.textContent = 'Send Message';
+});
+</script>
 
 </body>
 </html>
