@@ -1,12 +1,13 @@
-
 import { supabase } from './supabase.js';
 
 const gallery = document.getElementById('dynamicGallery');
 const categoryButtons = document.querySelectorAll('.category-btn');
 const loadMoreBtn = document.getElementById('loadMoreBtn');
+const searchInput = document.getElementById('searchInput');
 
 let allPrompts = [];
 let selectedCategory = 'All';
+let searchText = '';
 let visibleCount = 6;
 
 const PHOTOS_PER_PAGE = 6;
@@ -46,13 +47,25 @@ function showPrompts(category) {
 }
 
 function renderPrompts() {
+  if (!gallery) return;
+
   gallery.querySelectorAll('.prompt-card').forEach(card => card.remove());
 
-  const filteredPrompts = selectedCategory === 'All'
-    ? allPrompts
-    : allPrompts.filter(
-        item => (item.category || 'Other') === selectedCategory
-      );
+  const filteredPrompts = allPrompts.filter((item) => {
+    const categoryMatch =
+      selectedCategory === 'All' ||
+      (item.category || 'Other') === selectedCategory;
+
+    const text = (
+      (item.title || '') + ' ' +
+      (item.category || '') + ' ' +
+      (item.description || '')
+    ).toLowerCase();
+
+    const searchMatch = text.includes(searchText);
+
+    return categoryMatch && searchMatch;
+  });
 
   const visiblePrompts = filteredPrompts.slice(0, visibleCount);
 
@@ -68,14 +81,14 @@ function renderPrompts() {
 
     const image = document.createElement('img');
     image.src = item.image_url;
-    image.alt = item.title;
+    image.alt = item.title || 'AI Photo';
 
     imageLink.appendChild(image);
 
     const heading = document.createElement('h3');
     const titleLink = document.createElement('a');
     titleLink.href = postUrl;
-    titleLink.textContent = item.title;
+    titleLink.textContent = item.title || 'AI Photo';
     titleLink.style.color = 'inherit';
     titleLink.style.textDecoration = 'none';
 
@@ -95,12 +108,23 @@ function renderPrompts() {
   }
 }
 
+// Category Filter
 categoryButtons.forEach((button) => {
   button.addEventListener('click', () => {
     showPrompts(button.dataset.category);
   });
 });
 
+// Search
+if (searchInput) {
+  searchInput.addEventListener('input', () => {
+    searchText = searchInput.value.trim().toLowerCase();
+    visibleCount = 6;
+    renderPrompts();
+  });
+}
+
+// Load More
 if (loadMoreBtn) {
   loadMoreBtn.addEventListener('click', () => {
     visibleCount += PHOTOS_PER_PAGE;
