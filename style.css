@@ -1463,39 +1463,3 @@ body.dark-theme #galleryPosts .gallery-card a p {
     }
 
 }
-
-.gallery-pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    margin: 25px 0;
-    padding: 10px;
-}
-
-.gallery-pagination button {
-    background: #1769e0;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 22px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.gallery-pagination button:disabled {
-    background: #b8c5d8;
-    cursor: not-allowed;
-}
-
-.gallery-pagination button:not(:disabled):hover {
-    background: #0d4fb3;
-}
-
-@media (max-width: 480px) {
-    .gallery-pagination button {
-        padding: 11px 18px;
-        font-size: 14px;
-    }
-}
