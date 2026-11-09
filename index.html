@@ -1,3 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Photo Editing Prompts & AI Tools | Smart Tech R6</title>
+
+    <meta name="description" content="Discover trending AI photo editing prompts, creative AI images, free AI tools and easy editing tutorials in Hindi and English at Smart Tech R6.">
+
+    <meta name="keywords" content="AI photo editing prompts, trending AI prompts, AI photo editing, free AI tools, AI image prompts, photo editing tutorials, Smart Tech R6">
+
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Smart Tech R6">
+
+    <link rel="canonical" href="https://anilbhilwada772-ai.github.io/smart-tech-r6/">
+
+    <link rel="icon" type="image/png" href="smart-tech-r6-logo.png">
+
+    <meta name="google-site-verification" content="YAahAQDfk1j-wnKC-i_bv6yckxQKT8K6-SS2PTifSTs">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Smart Tech R6">
+    <meta property="og:title" content="AI Photo Editing Prompts & AI Tools | Smart Tech R6">
+    <meta property="og:description" content="Explore trending AI photo prompts, AI tools and creative editing tutorials in Hindi and English.">
+    <meta property="og:url" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/">
+    <meta property="og:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/images/photo1.png">
+    <meta property="og:image:alt" content="Smart Tech R6 AI Photo Editing Prompts">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Smart Tech R6 - AI Photo Editing Prompts">
+    <meta name="twitter:description" content="Discover trending AI photo prompts, AI tools and editing tutorials.">
+    <meta name="twitter:image" content="https://anilbhilwada772-ai.github.io/smart-tech-r6/images/photo1.png">
+
+    <meta name="theme-color" content="#1769e0">
+
+    <link rel="stylesheet" href="style.css">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Smart Tech R6",
+      "url": "https://anilbhilwada772-ai.github.io/smart-tech-r6/",
+      "description": "Explore AI photo editing prompts, AI tools, creative ideas and video editing tutorials in Hindi and English.",
+      "inLanguage": ["en", "hi"],
+      "publisher": {
+        "@type": "Organization",
+        "name": "Smart Tech R6",
+        "url": "https://anilbhilwada772-ai.github.io/smart-tech-r6/"
+      }
+    }
+    </script>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="header-brand">
+        <img src="smart-tech-r6-logo.png" alt="Smart Tech R6 Logo">
+
+        <div>
+            <h2>Smart Tech R6</h2>
+            <p>AI Photo Editing & Prompt Gallery</p>
+        </div>
+    </div>
+</header>
+
+<section class="homepage-promo-image">
+    <img src="smart-tech-r6-banner.png" alt="Smart Tech R6">
+</section>
+
+<main>
+
+<div class="quick-menu-bar">
+
+    <a href="index.html" class="quick-home" aria-label="Home">
+        🏠
+    </a>
+
+    <button
+        type="button"
+        id="categoryMenuToggle"
+        class="quick-category-toggle"
+        aria-expanded="false"
+        aria-controls="categoryMenuPanel">
+        ☰
+    </button>
+
+    <div class="quick-menu-spacer"></div>
+
+    <button type="button" id="themeToggle" class="quick-theme-toggle" aria-label="Change Theme">
+        ☀️
+    </button>
+
+</div>
+
+<div id="categoryMenuPanel" class="category-menu-panel" hidden>
+
+    <div class="category-filter">
+
+        <button class="category-btn" data-category="All">All</button>
+
+        <button class="category-btn" data-category="AI Photo Editing">AI Photo Editing</button>
+
+        <button class="category-btn" data-category="Couple Photos">Couple Photos</button>
+
+        <button class="category-btn" data-category="Boy Portrait">Boy Portrait</button>
+
+        <button class="category-btn" data-category="Girl Portrait">Girl Portrait</button>
+
+        <button class="category-btn" data-category="Festival Editing">Festival Editing</button>
+
+        <button class="category-btn" data-category="Trending AI Prompts">Trending AI Prompts</button>
+
+        <button class="category-btn" data-category="Other">Other</button>
+
+    </div>
+
+</div>
+
+<section class="welcome-banner">
+
+    <h1>Welcome to Smart Tech R6</h1>
+
+    <div class="welcome-buttons">
+
+        <a href="https://www.youtube.com/@anil.bhilwada"
+           target="_blank"
+           rel="noopener"
+           class="youtube-button">
+            ▶ Visit Our YouTube Channel
+        </a>
+
+    </div>
+
+</section>
+
+<div class="search-container">
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search AI Photos..."
+    >
+
+</div>
 
 <section id="publicGallery" class="public-gallery">
 
@@ -10,141 +158,225 @@
         <p>Loading gallery posts...</p>
     </div>
 
-    <div id="galleryPagination" class="gallery-pagination"></div>
-
 </section>
 
 <script type="module">
 import { supabase } from './supabase.js';
 
 const gallery = document.getElementById('galleryPosts');
-const pagination = document.getElementById('galleryPagination');
 
-const PHOTOS_PER_PAGE = 6;
-let allPosts = [];
-let currentPage = Math.max(
-    1,
-    parseInt(new URLSearchParams(location.search).get('page')) || 1
-);
+async function loadGalleryPosts() {
+  try {
+    const { data, error } = await supabase
+      .from('gallery_posts')
+      .select('id,title,category,description,thumbnail_url,created_at')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
 
-function updateURL() {
-    const url = new URL(location.href);
-
-    if (currentPage === 1) {
-        url.searchParams.delete('page');
-    } else {
-        url.searchParams.set('page', currentPage);
-    }
-
-    history.pushState({}, '', url);
-}
-
-function renderGallery() {
-    const totalPages = Math.ceil(allPosts.length / PHOTOS_PER_PAGE);
-    currentPage = Math.min(currentPage, Math.max(1, totalPages));
+    if (error) throw error;
 
     gallery.innerHTML = '';
 
-    if (!allPosts.length) {
-        gallery.textContent = 'No published posts available yet.';
-        pagination.innerHTML = '';
-        return;
+    if (!data || data.length === 0) {
+      gallery.textContent = 'No published posts available yet.';
+      return;
     }
 
-    const start = (currentPage - 1) * PHOTOS_PER_PAGE;
-    const posts = allPosts.slice(start, start + PHOTOS_PER_PAGE);
+    data.forEach(post => {
+      const card = document.createElement('article');
+      card.className = 'gallery-card';
 
-    posts.forEach(post => {
-        const card = document.createElement('article');
-        card.className = 'gallery-card';
+      const link = document.createElement('a');
+      link.href = 'gallery-detail.html?id=' + encodeURIComponent(post.id);
+      link.style.cssText =
+        'color:inherit;text-decoration:none;display:block';
 
-        const link = document.createElement('a');
-        link.href = 'gallery-detail.html?id=' + encodeURIComponent(post.id);
-        link.style.cssText = 'color:inherit;text-decoration:none;display:block';
+      const img = document.createElement('img');
+      img.src = post.thumbnail_url;
+      img.alt = post.title || 'AI Photo';
+      img.loading = 'lazy';
 
-        const img = document.createElement('img');
-        img.src = post.thumbnail_url;
-        img.alt = post.title || 'AI Photo';
-        img.loading = 'lazy';
+      const title = document.createElement('h3');
+      title.textContent = post.title || 'AI Photo';
 
-        const title = document.createElement('h3');
-        title.textContent = post.title || 'AI Photo';
+      const category = document.createElement('p');
+      category.textContent = post.category || 'AI Gallery';
 
-        const category = document.createElement('p');
-        category.textContent = post.category || 'AI Gallery';
-
-        link.append(img, title, category);
-        card.appendChild(link);
-        gallery.appendChild(card);
+      link.append(img, title, category);
+      card.append(link);
+      gallery.append(card);
     });
 
-    renderPagination(totalPages);
+  } catch (error) {
+    gallery.textContent = 'Gallery loading failed: ' + error.message;
+    console.error(error);
+  }
 }
-
-function renderPagination(totalPages) {
-    pagination.innerHTML = '';
-
-    if (totalPages <= 1) return;
-
-    const previous = document.createElement('button');
-    previous.textContent = '← Previous';
-    previous.disabled = currentPage === 1;
-
-    previous.onclick = () => {
-        if (currentPage > 1) {
-            currentPage--;
-            updateURL();
-            renderGallery();
-            document.getElementById('publicGallery')
-                .scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    const next = document.createElement('button');
-    next.textContent = 'Next →';
-    next.disabled = currentPage === totalPages;
-
-    next.onclick = () => {
-        if (currentPage < totalPages) {
-            currentPage++;
-            updateURL();
-            renderGallery();
-            document.getElementById('publicGallery')
-                .scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    pagination.append(previous, next);
-}
-
-async function loadGalleryPosts() {
-    try {
-        gallery.textContent = 'Loading gallery posts...';
-
-        const { data, error } = await supabase
-            .from('gallery_posts')
-            .select('id,title,category,description,thumbnail_url,created_at')
-            .eq('is_published', true)
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        allPosts = data || [];
-        renderGallery();
-
-    } catch (error) {
-        gallery.textContent = 'Gallery loading failed: ' + error.message;
-        console.error(error);
-    }
-}
-
-window.addEventListener('popstate', () => {
-    currentPage = Math.max(
-        1,
-        parseInt(new URLSearchParams(location.search).get('page')) || 1
-    );
-    renderGallery();
-});
 
 loadGalleryPosts();
 </script>
+
+<section class="gallery" id="dynamicGallery">
+
+    <div class="photo-card">
+        <a href="prompt1.html">
+            <img class="gallery-photo"
+                 src="photo1.png"
+                 alt="Trending AI Portrait">
+        </a>
+        <h3>Trending AI Portrait</h3>
+        <p>Beautiful cinematic AI photo prompt.</p>
+        <a href="prompt1.html">View Prompt</a>
+    </div>
+
+    <div class="photo-card">
+        <a href="prompt2.html">
+            <img class="gallery-photo"
+                 src="photo2.jpg"
+                 alt="AI Photo 2">
+        </a>
+        <h3>Royal Look Editing</h3>
+        <p>Creative royal style AI photo prompt.</p>
+        <a href="prompt2.html">View Prompt</a>
+    </div>
+
+    <div class="photo-card">
+        <a href="prompt3.html">
+            <img class="gallery-photo"
+                 src="photo3.jpg"
+                 alt="AI Photo 3">
+        </a>
+        <h3>Nature Photography</h3>
+        <p>Beautiful nature background AI prompt.</p>
+        <a href="prompt3.html">View Prompt</a>
+    </div>
+
+</section>
+
+<div class="load-more-container">
+    <button id="loadMoreBtn">Load More Photos</button>
+</div>
+
+<section class="featured-section">
+    <h2>⭐ Featured AI Photos</h2>
+    <p>Explore our latest AI photo editing ideas and prompts.</p>
+</section>
+
+</main>
+
+<!-- UPDATED FOOTER -->
+
+<footer class="site-footer">
+
+    <h3>Smart Tech R6</h3>
+
+    <p>AI Photo Editing Prompts, Tools and Creative Ideas.</p>
+
+    <div class="footer-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="contact.html">Contact</a>
+
+        <a href="privacy-policy.html">Privacy Policy</a>
+
+        <a href="terms.html">Terms & Conditions</a>
+
+        <a href="disclaimer.html">Disclaimer</a>
+
+    </div>
+
+    <p>
+        Email:
+        <a href="mailto:smarttechr6business@gmail.com">
+            smarttechr6business@gmail.com
+        </a>
+    </p>
+
+    <p>© 2026 Smart Tech R6. All Rights Reserved.</p>
+
+</footer>
+
+<style>
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 20px;
+    margin: 20px auto;
+    padding: 0 10px;
+}
+
+.footer-links a {
+    color: inherit;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #1769e0;
+    text-decoration: underline;
+}
+</style>
+
+<script type="module" src="show-prompts.js"></script>
+<script type="module" src="featured.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const toggle = document.getElementById("categoryMenuToggle");
+    const panel = document.getElementById("categoryMenuPanel");
+
+    if (toggle && panel) {
+
+        toggle.addEventListener("click", function () {
+
+            const isOpen = !panel.hidden;
+
+            panel.hidden = isOpen;
+
+            toggle.setAttribute(
+                "aria-expanded",
+                String(!isOpen)
+            );
+
+        });
+
+    }
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const themeButton = document.getElementById("themeToggle");
+
+    if (!themeButton) return;
+
+    if (localStorage.getItem("smartTechTheme") === "dark") {
+        document.body.classList.add("dark-theme");
+        themeButton.textContent = "🌙";
+    }
+
+    themeButton.addEventListener("click", function () {
+
+        document.body.classList.toggle("dark-theme");
+
+        const isDark = document.body.classList.contains("dark-theme");
+
+        themeButton.textContent = isDark ? "🌙" : "☀️";
+
+        localStorage.setItem(
+            "smartTechTheme",
+            isDark ? "dark" : "light"
+        );
+
+    });
+
+});
+</script>
+
+</body>
+</html>
