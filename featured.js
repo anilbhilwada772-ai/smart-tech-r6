@@ -1,3 +1,4 @@
+
 import { supabase } from './supabase.js';
 
 // Adds Featured Photos and Trending Blogs above the main gallery.
@@ -10,7 +11,16 @@ featuredStyle.textContent = `
   .featured-section h2 { margin-bottom:14px; }
   .featured-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px; }
   .featured-card { background:#fff; padding:12px; border-radius:13px; box-shadow:0 4px 15px rgba(30,80,140,.12); }
-  .featured-card img { width:100%; height:180px; object-fit:cover; border-radius:9px; }
+
+  .featured-card img {
+    width:100%;
+    aspect-ratio:16 / 9;
+    height:auto;
+    object-fit:contain;
+    display:block;
+    border-radius:9px;
+  }
+
   .featured-card a { color:#1769e0; font-weight:bold; }
   .featured-tag { display:inline-block; color:#1769e0; background:#eaf2ff; border-radius:20px; padding:4px 8px; font-size:12px; margin:6px 0; }
 `;
