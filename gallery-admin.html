@@ -1,78 +1,466 @@
 <!doctype html>
-<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gallery Admin | Smart Tech R6</title>
 <style>
-*{box-sizing:border-box}body{margin:0;padding:18px;background:#f3f6fc;color:#172033;font:15px Arial,sans-serif}main{max-width:900px;margin:20px auto;background:white;padding:22px;border-radius:14px;box-shadow:0 4px 18px #0001}input,select,textarea,button{display:block;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #ccd5e1;border-radius:8px;font-size:15px}textarea{min-height:90px}button{background:#1769e0;color:white;border:0;font-weight:bold;cursor:pointer}.secondary{background:#64748b}.danger{background:#b42318}.row{display:flex;gap:10px;flex-wrap:wrap}.row button{flex:1;min-width:150px}.item,.post{border:1px solid #dbe2ea;padding:14px;border-radius:10px;margin:12px 0}.note{font-size:13px;color:#64748b}#status{font-weight:bold;overflow-wrap:anywhere}.post img{max-width:100%;max-height:200px;object-fit:contain}hr{border:0;border-top:1px solid #e2e8f0;margin:25px 0}
-</style></head><body><main>
-<h1>Smart Tech R6 — Gallery Admin</h1><p class="note">नया Gallery Manager — पुराना Dashboard अलग रहेगा।</p><p id="status">Admin session जाँची जा रही है...</p>
-<form id="postForm"><h2 id="formTitle">नई Gallery Post</h2>
-<label>Post Title</label><input id="title" required maxlength="150">
-<label>Category</label><select id="category" required><option value="">Select Category</option><option>AI Photo Editing</option><option>Couple Photos</option><option>Boy Portrait</option><option>Girl Portrait</option><option>Festival Editing</option><option>AI Video Editing</option><option>Trending AI Prompts</option><option>Other</option></select>
-<label>Description</label><textarea id="description"></textarea>
-<label>Main Thumbnail (JPG/PNG/WEBP, max 5 MB)</label><input id="thumbnail" type="file" accept="image/jpeg,image/png,image/webp">
-<hr><h2>Photos & Videos</h2><div id="items"></div>
-<div class="row"><button type="button" class="secondary" id="addPhoto">+ Add Photo + Prompt</button><button type="button" class="secondary" id="addVideo">+ Add Video File</button><button type="button" class="secondary" id="addYoutube">+ Add YouTube Link</button></div>
+*{box-sizing:border-box}
+body{margin:0;padding:18px;background:#f3f6fc;color:#172033;font:15px Arial,sans-serif}
+main{max-width:900px;margin:20px auto;background:white;padding:22px;border-radius:14px;box-shadow:0 4px 18px #0001}
+input,select,textarea,button{display:block;width:100%;padding:12px;margin:8px 0 14px;border:1px solid #ccd5e1;border-radius:8px;font-size:15px}
+textarea{min-height:90px}
+button{background:#1769e0;color:white;border:0;font-weight:bold;cursor:pointer}
+.secondary{background:#64748b}
+.danger{background:#b42318}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row button{flex:1;min-width:150px}
+.item,.post{border:1px solid #dbe2ea;padding:14px;border-radius:10px;margin:12px 0}
+.note{font-size:13px;color:#64748b}
+#status{font-weight:bold;overflow-wrap:anywhere}
+.post img{max-width:100%;max-height:200px;object-fit:contain}
+hr{border:0;border-top:1px solid #e2e8f0;margin:25px 0}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Smart Tech R6 — Gallery Admin</h1>
+<p class="note">नया Gallery Manager — पुराना Dashboard अलग रहेगा।</p>
+<p id="status">Admin session जाँची जा रही है...</p>
+
+<form id="postForm">
+<h2 id="formTitle">नई Gallery Post</h2>
+
+<label>Post Title</label>
+<input id="title" required maxlength="150">
+
+<label>Category</label>
+<select id="category" required>
+<option value="">Select Category</option>
+<option>AI Photo Editing</option>
+<option>Couple Photos</option>
+<option>Boy Portrait</option>
+<option>Girl Portrait</option>
+<option>Festival Editing</option>
+<option>AI Video Editing</option>
+<option>Trending AI Prompts</option>
+<option>Other</option>
+</select>
+
+<label>Description</label>
+<textarea id="description"></textarea>
+
+<label>Main Thumbnail (JPG/PNG/WEBP, max 5 MB)</label>
+<input id="thumbnail" type="file" accept="image/jpeg,image/png,image/webp">
+
+<hr>
+
+<h2>Photos & Videos</h2>
+<div id="items"></div>
+
+<div class="row">
+<button type="button" class="secondary" id="addPhoto">+ Add Photo + Prompt</button>
+<button type="button" class="secondary" id="addVideo">+ Add Video File</button>
+<button type="button" class="secondary" id="addYoutube">+ Add YouTube Link</button>
+</div>
+
 <p class="note">हर फोटो का अलग Prompt होगा। Image max 5 MB; video MP4/WEBM/MOV max 50 MB.</p>
-<div class="row"><button id="save">Save as Draft</button><button type="button" class="secondary" id="cancel" hidden>Cancel Edit</button></div></form>
-<hr><h2>Manage Gallery Posts</h2><button type="button" class="secondary" id="refresh">Refresh</button><div id="posts">Loading...</div><button type="button" class="danger" id="logout">Logout</button>
+
+<hr>
+
+<h2>Complete Guide / Step-by-Step Tutorial</h2>
+<label>यहाँ बताएं कि Prompt का उपयोग कैसे करें और ऐसी Photo कैसे बनाएं।</label>
+<textarea id="guideContent" rows="12" placeholder="Step 1: सबसे पहले इस Prompt को Copy करें।
+
+Step 2: अपना AI Photo Editing Tool खोलें।
+
+Step 3: अपनी Photo Upload करें।
+
+Step 4: Copy किया हुआ Prompt Paste करें।
+
+Step 5: Generate बटन दबाएँ और अपनी Photo तैयार करें।
+
+आप यहाँ पूरी जानकारी लिख सकते हैं..."></textarea>
+<p class="note">यह Guide आपकी पोस्ट के सबसे नीचे दिखाई देगी।</p>
+
+<div class="row">
+<button id="save">Save as Draft</button>
+<button type="button" class="secondary" id="cancel" hidden>Cancel Edit</button>
+</div>
+
+</form>
+
+<hr>
+
+<h2>Manage Gallery Posts</h2>
+<button type="button" class="secondary" id="refresh">Refresh</button>
+<div id="posts">Loading...</div>
+<button type="button" class="danger" id="logout">Logout</button>
+
 </main>
-<template id="photoTpl"><div class="item" data-kind="photo"><b>Photo + Prompt</b><label>Photo File</label><input class="file" type="file" accept="image/jpeg,image/png,image/webp" required><label>AI Prompt</label><textarea class="prompt" required></textarea><button type="button" class="danger remove">Remove</button></div></template>
-<template id="videoTpl"><div class="item" data-kind="video_upload"><b>Video File</b><label>Choose Video</label><input class="file" type="file" accept="video/mp4,video/webm,video/quicktime" required><label>Description (optional)</label><textarea class="itemDesc"></textarea><button type="button" class="danger remove">Remove</button></div></template>
-<template id="youtubeTpl"><div class="item" data-kind="youtube"><b>YouTube Link</b><label>Video URL</label><input class="youtube" type="url" required placeholder="https://youtu.be/..."><label>Description (optional)</label><textarea class="itemDesc"></textarea><button type="button" class="danger remove">Remove</button></div></template>
+
+<template id="photoTpl">
+<div class="item" data-kind="photo">
+<b>Photo + Prompt</b>
+<label>Photo File</label>
+<input class="file" type="file" accept="image/jpeg,image/png,image/webp" required>
+<label>AI Prompt</label>
+<textarea class="prompt" required></textarea>
+<button type="button" class="danger remove">Remove</button>
+</div>
+</template>
+
+<template id="videoTpl">
+<div class="item" data-kind="video_upload">
+<b>Video File</b>
+<label>Choose Video</label>
+<input class="file" type="file" accept="video/mp4,video/webm,video/quicktime" required>
+<label>Description (optional)</label>
+<textarea class="itemDesc"></textarea>
+<button type="button" class="danger remove">Remove</button>
+</div>
+</template>
+
+<template id="youtubeTpl">
+<div class="item" data-kind="youtube">
+<b>YouTube Link</b>
+<label>Video URL</label>
+<input class="youtube" type="url" required placeholder="https://youtu.be/...">
+<label>Description (optional)</label>
+<textarea class="itemDesc"></textarea>
+<button type="button" class="danger remove">Remove</button>
+</div>
+</template>
+
 <script type="module">
 import { supabase } from './supabase.js';
-const ADMIN_EMAIL='anilbhilwada772@gmail.com', $=id=>document.getElementById(id);
-let editingId=null,oldItems=[];const status=$('status'),itemsBox=$('items');
+
+const ADMIN_EMAIL='anilbhilwada772@gmail.com';
+const $=id=>document.getElementById(id);
+
+let editingId=null,oldItems=[];
+const status=$('status');
+const itemsBox=$('items');
+
 const {data:{session},error:authError}=await supabase.auth.getSession();
-if(authError||!session||session.user.email?.toLowerCase()!==ADMIN_EMAIL){status.textContent='Admin session नहीं मिला। Login पेज पर भेज रहे हैं...';setTimeout(()=>location.replace('admin.html'),900)}
-else{status.textContent='Admin verified. Gallery Manager ready.';await loadPosts()}
+
+if(authError||!session||session.user.email?.toLowerCase()!==ADMIN_EMAIL){
+ status.textContent='Admin session नहीं मिला। Login पेज पर भेज रहे हैं...';
+ setTimeout(()=>location.replace('admin.html'),900);
+}else{
+ status.textContent='Admin verified. Gallery Manager ready.';
+ await loadPosts();
+}
+
 function addItem(kind,data=null){
- const tid=kind==='photo'?'photoTpl':kind==='video_upload'?'videoTpl':'youtubeTpl',frag=$(tid).content.cloneNode(true),box=frag.querySelector('.item');
- if(data){box.dataset.itemId=data.id;if(kind==='photo'){box.querySelector('.prompt').value=data.prompt||'';box.querySelector('.file').required=false}else if(kind==='youtube')box.querySelector('.youtube').value=data.media_url||'';else box.querySelector('.file').required=false;const d=box.querySelector('.itemDesc');if(d)d.value=data.description||'';const note=document.createElement('p');note.className='note';note.textContent='मौजूदा media सुरक्षित है; बदलने के लिए नई file चुनें।';box.prepend(note)}
- box.querySelector('.remove').onclick=()=>box.remove();itemsBox.append(frag)
-}
-$('addPhoto').onclick=()=>addItem('photo');$('addVideo').onclick=()=>addItem('video_upload');$('addYoutube').onclick=()=>addItem('youtube');
-async function upload(file,kind){
- const image=kind==='photo'||kind==='thumbnail',types=image?['image/jpeg','image/png','image/webp']:['video/mp4','video/webm','video/quicktime'];
- if(!types.includes(file.type))throw Error(image?'JPG, PNG या WEBP image चुनें।':'MP4, WEBM या MOV video चुनें।');
- if(file.size>(image?5:50)*1024*1024)throw Error(image?'Image 5 MB से छोटी होनी चाहिए।':'Video 50 MB से छोटी होनी चाहिए।');
- const path=crypto.randomUUID()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_'),{error}=await supabase.storage.from('gallery-media').upload(path,file);
- if(error)throw error;return supabase.storage.from('gallery-media').getPublicUrl(path).data.publicUrl
-}
-function youtubeOK(v){try{return ['youtube.com','www.youtube.com','m.youtube.com','youtu.be'].includes(new URL(v).hostname)}catch{return false}}
-$('postForm').onsubmit=async e=>{
- e.preventDefault();$('save').disabled=true;
- try{
-  const title=$('title').value.trim(),category=$('category').value,description=$('description').value.trim(),thumb=$('thumbnail').files[0],boxes=[...itemsBox.querySelectorAll('.item')];
-  if(!editingId&&!thumb)throw Error('Main Thumbnail चुनें।');if(!editingId&&!boxes.length)throw Error('कम से कम एक Photo या Video जोड़ें।');
-  let thumbUrl=null;if(thumb)thumbUrl=await upload(thumb,'thumbnail');let postId=editingId;
-  if(postId){const u={title,category,description};if(thumbUrl)u.thumbnail_url=thumbUrl;const {error}=await supabase.from('gallery_posts').update(u).eq('id',postId);if(error)throw error}
-  else{const {data,error}=await supabase.from('gallery_posts').insert({title,category,description,thumbnail_url:thumbUrl,is_published:false}).select('id').single();if(error)throw error;postId=data.id}
-  for(let i=0;i<boxes.length;i++){
-   const b=boxes[i],kind=b.dataset.kind,oldId=b.dataset.itemId,old=oldItems.find(x=>x.id===oldId);let media=old?.media_url||null;
-   const prompt=kind==='photo'?b.querySelector('.prompt').value.trim():null,desc=b.querySelector('.itemDesc')?.value.trim()||null;
-   if(kind==='youtube'){media=b.querySelector('.youtube').value.trim();if(!youtubeOK(media))throw Error('सही YouTube URL डालें।')}
-   else{const f=b.querySelector('.file').files[0];if(f)media=await upload(f,kind);if(!media)throw Error('हर media item की file चुनें।')}
-   if(kind==='photo'&&!prompt)throw Error('हर Photo का Prompt लिखें।');
-   const row={post_id:postId,item_type:kind,media_url:media,prompt,description:desc,sort_order:i};
-   const r=oldId?await supabase.from('gallery_items').update(row).eq('id',oldId):await supabase.from('gallery_items').insert(row);if(r.error)throw r.error
+ const tid=kind==='photo'?'photoTpl':kind==='video_upload'?'videoTpl':'youtubeTpl';
+ const frag=$(tid).content.cloneNode(true);
+ const box=frag.querySelector('.item');
+
+ if(data){
+  box.dataset.itemId=data.id;
+
+  if(kind==='photo'){
+   box.querySelector('.prompt').value=data.prompt||'';
+   box.querySelector('.file').required=false;
+  }else if(kind==='youtube'){
+   box.querySelector('.youtube').value=data.media_url||'';
+  }else{
+   box.querySelector('.file').required=false;
   }
-  status.textContent='Post Draft के रूप में save हुई। Publish बटन से live करें।';resetForm();await loadPosts()
- }catch(err){status.textContent='Save failed: '+err.message}finally{$('save').disabled=false}
-};
-function resetForm(){$('postForm').reset();itemsBox.innerHTML='';editingId=null;oldItems=[];$('formTitle').textContent='नई Gallery Post';$('save').textContent='Save as Draft';$('cancel').hidden=true}
-$('cancel').onclick=resetForm;
-async function loadPosts(){
- $('posts').textContent='Loading...';const {data,error}=await supabase.from('gallery_posts').select('*').order('created_at',{ascending:false});
- if(error){$('posts').textContent='Load failed: '+error.message;return}$('posts').innerHTML='';if(!data?.length){$('posts').textContent='अभी कोई Gallery Post नहीं है।';return}
- for(const p of data){
-  const c=document.createElement('div');c.className='post';if(p.thumbnail_url){const im=document.createElement('img');im.src=p.thumbnail_url;im.alt=p.title;c.append(im)}
-  const h=document.createElement('h3');h.textContent=p.title;const m=document.createElement('p');m.textContent=(p.category||'Other')+' • '+(p.is_published?'Published':'Draft');
-  const edit=document.createElement('button');edit.className='secondary';edit.textContent='Edit Post';const pub=document.createElement('button');pub.textContent=p.is_published?'Unpublish':'Publish';const del=document.createElement('button');del.className='danger';del.textContent='Delete Post';c.append(h,m,edit,pub,del);$('posts').append(c);
-  edit.onclick=async()=>{const {data:rows,error}=await supabase.from('gallery_items').select('*').eq('post_id',p.id).order('sort_order');if(error){status.textContent=error.message;return}editingId=p.id;oldItems=rows||[];$('title').value=p.title;$('category').value=p.category||'';$('description').value=p.description||'';$('thumbnail').value='';itemsBox.innerHTML='';oldItems.forEach(x=>addItem(x.item_type,x));$('formTitle').textContent='Edit Gallery Post';$('save').textContent='Save Changes';$('cancel').hidden=false;window.scrollTo({top:0,behavior:'smooth'})};
-  pub.onclick=async()=>{pub.disabled=true;const {error}=await supabase.from('gallery_posts').update({is_published:!p.is_published}).eq('id',p.id);if(error)status.textContent=error.message;else{status.textContent=p.is_published?'Post unpublished.':'Post published.';await loadPosts()}};
-  del.onclick=async()=>{if(!confirm('इस पोस्ट और इसके items को delete करना है?'))return;del.disabled=true;const {error}=await supabase.from('gallery_posts').delete().eq('id',p.id);if(error){status.textContent=error.message;del.disabled=false}else{status.textContent='Post deleted.';await loadPosts()}}
+
+  const d=box.querySelector('.itemDesc');
+  if(d)d.value=data.description||'';
+
+  const note=document.createElement('p');
+  note.className='note';
+  note.textContent='मौजूदा media सुरक्षित है; बदलने के लिए नई file चुनें।';
+  box.prepend(note);
+ }
+
+ box.querySelector('.remove').onclick=()=>box.remove();
+ itemsBox.append(frag);
+}
+
+$('addPhoto').onclick=()=>addItem('photo');
+$('addVideo').onclick=()=>addItem('video_upload');
+$('addYoutube').onclick=()=>addItem('youtube');
+
+async function upload(file,kind){
+ const image=kind==='photo'||kind==='thumbnail';
+ const types=image
+  ?['image/jpeg','image/png','image/webp']
+  :['video/mp4','video/webm','video/quicktime'];
+
+ if(!types.includes(file.type)){
+  throw Error(image?'JPG, PNG या WEBP image चुनें।':'MP4, WEBM या MOV video चुनें।');
+ }
+
+ if(file.size>(image?5:50)*1024*1024){
+  throw Error(image?'Image 5 MB से छोटी होनी चाहिए।':'Video 50 MB से छोटी होनी चाहिए।');
+ }
+
+ const path=crypto.randomUUID()+'-'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+
+ const {error}=await supabase.storage.from('gallery-media').upload(path,file);
+ if(error)throw error;
+
+ return supabase.storage.from('gallery-media').getPublicUrl(path).data.publicUrl;
+}
+
+function youtubeOK(v){
+ try{
+  return ['youtube.com','www.youtube.com','m.youtube.com','youtu.be'].includes(new URL(v).hostname);
+ }catch{
+  return false;
  }
 }
-$('refresh').onclick=loadPosts;$('logout').onclick=async()=>{await supabase.auth.signOut();location.href='admin.html'};
-</script></body></html>
+
+$('postForm').onsubmit=async e=>{
+ e.preventDefault();
+ $('save').disabled=true;
+
+ try{
+  const title=$('title').value.trim();
+  const category=$('category').value;
+  const description=$('description').value.trim();
+  const guideContent=$('guideContent').value.trim();
+  const thumb=$('thumbnail').files[0];
+  const boxes=[...itemsBox.querySelectorAll('.item')];
+
+  if(!editingId&&!thumb)throw Error('Main Thumbnail चुनें।');
+  if(!editingId&&!boxes.length)throw Error('कम से कम एक Photo या Video जोड़ें।');
+
+  let thumbUrl=null;
+  if(thumb)thumbUrl=await upload(thumb,'thumbnail');
+
+  let postId=editingId;
+
+  if(postId){
+   const u={
+    title,
+    category,
+    description,
+    guide_content:guideContent
+   };
+
+   if(thumbUrl)u.thumbnail_url=thumbUrl;
+
+   const {error}=await supabase
+    .from('gallery_posts')
+    .update(u)
+    .eq('id',postId);
+
+   if(error)throw error;
+
+  }else{
+   const {data,error}=await supabase
+    .from('gallery_posts')
+    .insert({
+     title,
+     category,
+     description,
+     guide_content:guideContent,
+     thumbnail_url:thumbUrl,
+     is_published:false
+    })
+    .select('id')
+    .single();
+
+   if(error)throw error;
+   postId=data.id;
+  }
+
+  for(let i=0;i<boxes.length;i++){
+   const b=boxes[i];
+   const kind=b.dataset.kind;
+   const oldId=b.dataset.itemId;
+   const old=oldItems.find(x=>x.id===oldId);
+
+   let media=old?.media_url||null;
+
+   const prompt=kind==='photo'
+    ?b.querySelector('.prompt').value.trim()
+    :null;
+
+   const desc=b.querySelector('.itemDesc')?.value.trim()||null;
+
+   if(kind==='youtube'){
+    media=b.querySelector('.youtube').value.trim();
+    if(!youtubeOK(media))throw Error('सही YouTube URL डालें।');
+   }else{
+    const f=b.querySelector('.file').files[0];
+    if(f)media=await upload(f,kind);
+    if(!media)throw Error('हर media item की file चुनें।');
+   }
+
+   if(kind==='photo'&&!prompt)throw Error('हर Photo का Prompt लिखें।');
+
+   const row={
+    post_id:postId,
+    item_type:kind,
+    media_url:media,
+    prompt,
+    description:desc,
+    sort_order:i
+   };
+
+   const r=oldId
+    ?await supabase.from('gallery_items').update(row).eq('id',oldId)
+    :await supabase.from('gallery_items').insert(row);
+
+   if(r.error)throw r.error;
+  }
+
+  status.textContent='Post Draft के रूप में save हुई। Publish बटन से live करें।';
+  resetForm();
+  await loadPosts();
+
+ }catch(err){
+  status.textContent='Save failed: '+err.message;
+ }finally{
+  $('save').disabled=false;
+ }
+};
+
+function resetForm(){
+ $('postForm').reset();
+ itemsBox.innerHTML='';
+ editingId=null;
+ oldItems=[];
+ $('formTitle').textContent='नई Gallery Post';
+ $('save').textContent='Save as Draft';
+ $('cancel').hidden=true;
+}
+
+$('cancel').onclick=resetForm;
+
+async function loadPosts(){
+ $('posts').textContent='Loading...';
+
+ const {data,error}=await supabase
+  .from('gallery_posts')
+  .select('*')
+  .order('created_at',{ascending:false});
+
+ if(error){
+  $('posts').textContent='Load failed: '+error.message;
+  return;
+ }
+
+ $('posts').innerHTML='';
+
+ if(!data?.length){
+  $('posts').textContent='अभी कोई Gallery Post नहीं है।';
+  return;
+ }
+
+ for(const p of data){
+  const c=document.createElement('div');
+  c.className='post';
+
+  if(p.thumbnail_url){
+   const im=document.createElement('img');
+   im.src=p.thumbnail_url;
+   im.alt=p.title;
+   c.append(im);
+  }
+
+  const h=document.createElement('h3');
+  h.textContent=p.title;
+
+  const m=document.createElement('p');
+  m.textContent=(p.category||'Other')+' • '+(p.is_published?'Published':'Draft');
+
+  const edit=document.createElement('button');
+  edit.className='secondary';
+  edit.textContent='Edit Post';
+
+  const pub=document.createElement('button');
+  pub.textContent=p.is_published?'Unpublish':'Publish';
+
+  const del=document.createElement('button');
+  del.className='danger';
+  del.textContent='Delete Post';
+
+  c.append(h,m,edit,pub,del);
+  $('posts').append(c);
+
+  edit.onclick=async()=>{
+   const {data:rows,error}=await supabase
+    .from('gallery_items')
+    .select('*')
+    .eq('post_id',p.id)
+    .order('sort_order');
+
+   if(error){
+    status.textContent=error.message;
+    return;
+   }
+
+   editingId=p.id;
+   oldItems=rows||[];
+
+   $('title').value=p.title;
+   $('category').value=p.category||'';
+   $('description').value=p.description||'';
+   $('guideContent').value=p.guide_content||'';
+   $('thumbnail').value='';
+
+   itemsBox.innerHTML='';
+   oldItems.forEach(x=>addItem(x.item_type,x));
+
+   $('formTitle').textContent='Edit Gallery Post';
+   $('save').textContent='Save Changes';
+   $('cancel').hidden=false;
+
+   window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  pub.onclick=async()=>{
+   pub.disabled=true;
+
+   const {error}=await supabase
+    .from('gallery_posts')
+    .update({is_published:!p.is_published})
+    .eq('id',p.id);
+
+   if(error){
+    status.textContent=error.message;
+   }else{
+    status.textContent=p.is_published?'Post unpublished.':'Post published.';
+    await loadPosts();
+   }
+  };
+
+  del.onclick=async()=>{
+   if(!confirm('इस पोस्ट और इसके items को delete करना है?'))return;
+
+   del.disabled=true;
+
+   const {error}=await supabase
+    .from('gallery_posts')
+    .delete()
+    .eq('id',p.id);
+
+   if(error){
+    status.textContent=error.message;
+    del.disabled=false;
+   }else{
+    status.textContent='Post deleted.';
+    await loadPosts();
+   }
+  };
+ }
+}
+
+$('refresh').onclick=loadPosts;
+
+$('logout').onclick=async()=>{
+ await supabase.auth.signOut();
+ location.href='admin.html';
+};
+</script>
+</body>
+</html>
