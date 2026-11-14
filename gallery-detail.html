@@ -553,6 +553,8 @@ async function loadPost(){
   message.hidden=true;
   post.hidden=false;
 
+loadSuggestedPosts(id);
+
  }catch(error){
   message.textContent='Error loading post: '+error.message;
  }
