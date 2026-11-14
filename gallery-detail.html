@@ -336,6 +336,50 @@ async function copyPrompt(text,status){
 }
 
 function renderItem(item){
+async function loadSuggestedPosts(currentId){
+
+ const box=document.getElementById('suggestedPosts');
+
+ const {data,error}=await supabase
+  .from('gallery_posts')
+  .select('id,title,thumbnail_url')
+  .eq('is_published',true)
+  .neq('id',currentId)
+  .not('thumbnail_url','is',null)
+  .order('created_at',{ascending:false})
+  .limit(3);
+
+ if(error){
+  console.error('Suggested Posts Error:',error);
+  return;
+ }
+
+ box.innerHTML='';
+
+ if(!data||data.length===0){
+  box.innerHTML='<p>No suggested posts available.</p>';
+  return;
+ }
+
+ data.forEach(item=>{
+
+  const link=document.createElement('a');
+  link.className='suggested-card';
+  link.href='gallery-detail.html?id='+encodeURIComponent(item.id);
+
+  const img=document.createElement('img');
+  img.src=item.thumbnail_url;
+  img.alt=item.title||'AI Photo';
+  img.loading='lazy';
+
+  const title=document.createElement('h3');
+  title.textContent=item.title||'AI Photo Prompt';
+
+  link.append(img,title);
+  box.appendChild(link);
+
+ });
+}
  const card=document.createElement('section');
  card.className='item-card';
 
