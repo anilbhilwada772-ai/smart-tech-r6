@@ -160,20 +160,22 @@
 
 </section>
 
+
 <script type="module">
 import { supabase } from './supabase.js';
 
 const gallery = document.getElementById('galleryPosts');
+const searchInput = document.getElementById('searchInput');
 
 const POSTS_PER_PAGE = 6;
 let currentPage = 0;
 let totalPosts = 0;
 let isLoading = false;
+let searchText = '';
+let searchTimer;
 
-// Pagination container
 const pagination = document.createElement('div');
 pagination.id = 'galleryPagination';
-
 pagination.style.cssText = `
   display:flex;
   justify-content:center;
@@ -185,9 +187,7 @@ pagination.style.cssText = `
 
 gallery.after(pagination);
 
-// Load posts
 async function loadGalleryPosts() {
-
   if (isLoading) return;
   isLoading = true;
 
@@ -195,41 +195,49 @@ async function loadGalleryPosts() {
   pagination.innerHTML = '';
 
   try {
-
     const from = currentPage * POSTS_PER_PAGE;
     const to = from + POSTS_PER_PAGE - 1;
 
-    const { data, error, count } = await supabase
+    let query = supabase
       .from('gallery_posts')
       .select(
         'id,title,category,description,thumbnail_url,created_at',
         { count: 'exact' }
       )
       .eq('is_published', true)
-      .order('created_at', { ascending: false })
-      .range(from, to);
+      .order('created_at', { ascending: false });
+
+    if (searchText) {
+      const safeText = searchText.replace(/[,%()]/g, ' ').trim();
+
+      if (safeText) {
+        query = query.or(
+          `title.ilike.%${safeText}%,category.ilike.%${safeText}%`
+        );
+      }
+    }
+
+    const { data, error, count } = await query.range(from, to);
 
     if (error) throw error;
 
     totalPosts = count || 0;
-
     gallery.innerHTML = '';
 
     if (!data || data.length === 0) {
-      gallery.textContent = 'No published posts available yet.';
+      gallery.textContent = searchText
+        ? 'No matching photos found.'
+        : 'No published posts available yet.';
       return;
     }
 
     data.forEach(post => {
-
       const card = document.createElement('article');
       card.className = 'gallery-card';
 
       const link = document.createElement('a');
-
       link.href = 'gallery-detail.html?id=' +
         encodeURIComponent(post.id);
-
       link.style.cssText =
         'color:inherit;text-decoration:none;display:block';
 
@@ -247,30 +255,22 @@ async function loadGalleryPosts() {
       link.append(img, title, category);
       card.append(link);
       gallery.append(card);
-
     });
 
     createPagination();
 
   } catch (error) {
-
-    gallery.textContent =
-      'Gallery loading failed: ' + error.message;
-
+    gallery.textContent = 'Gallery loading failed: ' + error.message;
     console.error('Gallery Error:', error);
-
   } finally {
     isLoading = false;
   }
 }
 
-// Previous and Next buttons
 function createPagination() {
-
   pagination.innerHTML = '';
 
   const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-
   if (totalPages <= 1) return;
 
   const prevBtn = document.createElement('button');
@@ -284,33 +284,9 @@ function createPagination() {
   const info = document.createElement('span');
   info.textContent =
     'Page ' + (currentPage + 1) + ' of ' + totalPages;
+  info.style.cssText = 'font-weight:bold;color:inherit;';
 
-  info.style.cssText = `
-    font-weight:bold;
-    color:inherit;
-  `;
-
-  prevBtn.onclick = () => {
-    if (currentPage > 0) {
-      currentPage--;
-      loadGalleryPosts();
-
-      document.getElementById('publicGallery')
-        .scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  nextBtn.onclick = () => {
-    if (currentPage < totalPages - 1) {
-      currentPage++;
-      loadGalleryPosts();
-
-      document.getElementById('publicGallery')
-        .scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  prevBtn.style.cssText = `
+  const buttonStyle = `
     padding:11px 18px;
     border:0;
     border-radius:7px;
@@ -320,16 +296,49 @@ function createPagination() {
     font-weight:bold;
   `;
 
-  nextBtn.style.cssText = prevBtn.style.cssText;
+  prevBtn.style.cssText = buttonStyle;
+  nextBtn.style.cssText = buttonStyle;
 
-  prevBtn.disabled && (prevBtn.style.opacity = '0.45');
-  nextBtn.disabled && (nextBtn.style.opacity = '0.45');
+  if (prevBtn.disabled) prevBtn.style.opacity = '0.45';
+  if (nextBtn.disabled) nextBtn.style.opacity = '0.45';
+
+  prevBtn.onclick = () => {
+    if (currentPage > 0) {
+      currentPage--;
+      loadGalleryPosts();
+      document.getElementById('publicGallery')
+        .scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  nextBtn.onclick = () => {
+    if (currentPage < totalPages - 1) {
+      currentPage++;
+      loadGalleryPosts();
+      document.getElementById('publicGallery')
+        .scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   pagination.append(prevBtn, info, nextBtn);
 }
 
+// Search for Latest AI Photo Prompts
+if (searchInput) {
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimer);
+
+    searchTimer = setTimeout(() => {
+      searchText = searchInput.value.trim();
+      currentPage = 0;
+      loadGalleryPosts();
+    }, 300);
+  });
+}
+
 loadGalleryPosts();
 </script>
+
 
 <section class="gallery" id="dynamicGallery">
 
