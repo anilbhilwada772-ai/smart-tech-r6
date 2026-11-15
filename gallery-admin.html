@@ -169,10 +169,10 @@ function addItem(kind,data=null){
  if(data){
   box.dataset.itemId=data.id;
 
-  if(kind==='photo'){
-   box.querySelector('.prompt').value=data.prompt||'';
-   box.querySelector('.file').required=false;
-  }else if(kind==='youtube'){
+ if(kind==='photo'||kind==='video_upload'){
+ box.querySelector('.prompt').value=data.prompt||'';
+ box.querySelector('.file').required=false;
+}else if(kind==='youtube'){
    box.querySelector('.youtube').value=data.media_url||'';
   }else{
    box.querySelector('.file').required=false;
