@@ -406,7 +406,7 @@ function renderItem(item) {
     addText(card, 'h3', 'AI Photo Prompt');
 
     if (item.prompt) {
-      addText(card, 'div', item.prompt, 'prompt');
+     addExpandablePrompt(card,item.prompt);
 
       const row = document.createElement('div');
       row.style.marginTop = '12px';
