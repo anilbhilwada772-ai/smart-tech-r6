@@ -268,6 +268,33 @@ function addText(parent, tag, value, className = '') {
   return el;
 }
 
+function addExpandablePrompt(parent, text){
+
+ const heading=document.createElement('div');
+ heading.className='prompt-heading';
+
+ const label=document.createElement('strong');
+ label.textContent='AI Prompt';
+
+ const btn=document.createElement('button');
+ btn.className='prompt-toggle';
+ btn.textContent='📖 Full Prompt';
+
+ heading.append(label,btn);
+ parent.appendChild(heading);
+
+ const promptBox=addText(parent,'div',text,'prompt');
+ promptBox.classList.add('prompt-collapsed');
+
+ btn.onclick=()=>{
+  const isCollapsed=promptBox.classList.toggle('prompt-collapsed');
+
+  btn.textContent=isCollapsed
+   ?'📖 Full Prompt'
+   :'Show Less';
+ };
+}
+
 // SEO Functions
 function setMeta(attribute, name, content) {
   let tag = document.querySelector(`meta[${attribute}="${name}"]`);
