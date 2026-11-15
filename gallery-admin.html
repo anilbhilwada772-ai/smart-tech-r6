@@ -111,16 +111,24 @@ Step 5: Generate बटन दबाएँ और अपनी Photo तैय�
 </div>
 </template>
 
+
 <template id="videoTpl">
 <div class="item" data-kind="video_upload">
-<b>Video File</b>
+<b>Video File + Prompt</b>
+
 <label>Choose Video</label>
 <input class="file" type="file" accept="video/mp4,video/webm,video/quicktime" required>
+
+<label>Video Prompt</label>
+<textarea class="prompt" required placeholder="यहाँ Video बनाने वाला पूरा Prompt लिखें..."></textarea>
+
 <label>Description (optional)</label>
 <textarea class="itemDesc"></textarea>
+
 <button type="button" class="danger remove">Remove</button>
 </div>
 </template>
+
 
 <template id="youtubeTpl">
 <div class="item" data-kind="youtube">
