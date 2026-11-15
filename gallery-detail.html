@@ -458,8 +458,7 @@ function renderItem(item) {
 
     if (item.prompt) {
       addText(card, 'h3', '🎬 Video Prompt');
-      addText(card, 'div', item.prompt, 'prompt');
-
+      addExpandablePrompt(card,item.prompt);
       const row = document.createElement('div');
       row.style.marginTop = '12px';
       row.style.display = 'flex';
