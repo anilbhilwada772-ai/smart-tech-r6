@@ -288,9 +288,9 @@ $('postForm').onsubmit=async e=>{
 
    let media=old?.media_url||null;
 
-   const prompt=kind==='photo'
-    ?b.querySelector('.prompt').value.trim()
-    :null;
+  const prompt=(kind==='photo'||kind==='video_upload')
+ ?b.querySelector('.prompt').value.trim()
+ :null;
 
    const desc=b.querySelector('.itemDesc')?.value.trim()||null;
 
