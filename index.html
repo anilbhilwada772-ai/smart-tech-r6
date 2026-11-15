@@ -165,15 +165,53 @@ import { supabase } from './supabase.js';
 
 const gallery = document.getElementById('galleryPosts');
 
+const POSTS_PER_PAGE = 6;
+let currentPage = 0;
+let totalPosts = 0;
+let isLoading = false;
+
+// Pagination container
+const pagination = document.createElement('div');
+pagination.id = 'galleryPagination';
+
+pagination.style.cssText = `
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin:25px auto;
+`;
+
+gallery.after(pagination);
+
+// Load posts
 async function loadGalleryPosts() {
+
+  if (isLoading) return;
+  isLoading = true;
+
+  gallery.innerHTML = '<p>Loading gallery posts...</p>';
+  pagination.innerHTML = '';
+
   try {
-    const { data, error } = await supabase
+
+    const from = currentPage * POSTS_PER_PAGE;
+    const to = from + POSTS_PER_PAGE - 1;
+
+    const { data, error, count } = await supabase
       .from('gallery_posts')
-      .select('id,title,category,description,thumbnail_url,created_at')
+      .select(
+        'id,title,category,description,thumbnail_url,created_at',
+        { count: 'exact' }
+      )
       .eq('is_published', true)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .range(from, to);
 
     if (error) throw error;
+
+    totalPosts = count || 0;
 
     gallery.innerHTML = '';
 
@@ -183,16 +221,20 @@ async function loadGalleryPosts() {
     }
 
     data.forEach(post => {
+
       const card = document.createElement('article');
       card.className = 'gallery-card';
 
       const link = document.createElement('a');
-      link.href = 'gallery-detail.html?id=' + encodeURIComponent(post.id);
+
+      link.href = 'gallery-detail.html?id=' +
+        encodeURIComponent(post.id);
+
       link.style.cssText =
         'color:inherit;text-decoration:none;display:block';
 
       const img = document.createElement('img');
-      img.src = post.thumbnail_url;
+      img.src = post.thumbnail_url || '';
       img.alt = post.title || 'AI Photo';
       img.loading = 'lazy';
 
@@ -205,12 +247,85 @@ async function loadGalleryPosts() {
       link.append(img, title, category);
       card.append(link);
       gallery.append(card);
+
     });
 
+    createPagination();
+
   } catch (error) {
-    gallery.textContent = 'Gallery loading failed: ' + error.message;
-    console.error(error);
+
+    gallery.textContent =
+      'Gallery loading failed: ' + error.message;
+
+    console.error('Gallery Error:', error);
+
+  } finally {
+    isLoading = false;
   }
+}
+
+// Previous and Next buttons
+function createPagination() {
+
+  pagination.innerHTML = '';
+
+  const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
+  if (totalPages <= 1) return;
+
+  const prevBtn = document.createElement('button');
+  prevBtn.textContent = '← Previous';
+  prevBtn.disabled = currentPage === 0;
+
+  const nextBtn = document.createElement('button');
+  nextBtn.textContent = 'Next →';
+  nextBtn.disabled = currentPage >= totalPages - 1;
+
+  const info = document.createElement('span');
+  info.textContent =
+    'Page ' + (currentPage + 1) + ' of ' + totalPages;
+
+  info.style.cssText = `
+    font-weight:bold;
+    color:inherit;
+  `;
+
+  prevBtn.onclick = () => {
+    if (currentPage > 0) {
+      currentPage--;
+      loadGalleryPosts();
+
+      document.getElementById('publicGallery')
+        .scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  nextBtn.onclick = () => {
+    if (currentPage < totalPages - 1) {
+      currentPage++;
+      loadGalleryPosts();
+
+      document.getElementById('publicGallery')
+        .scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  prevBtn.style.cssText = `
+    padding:11px 18px;
+    border:0;
+    border-radius:7px;
+    background:#1769e0;
+    color:white;
+    cursor:pointer;
+    font-weight:bold;
+  `;
+
+  nextBtn.style.cssText = prevBtn.style.cssText;
+
+  prevBtn.disabled && (prevBtn.style.opacity = '0.45');
+  nextBtn.disabled && (nextBtn.style.opacity = '0.45');
+
+  pagination.append(prevBtn, info, nextBtn);
 }
 
 loadGalleryPosts();
