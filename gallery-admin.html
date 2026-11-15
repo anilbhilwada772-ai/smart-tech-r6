@@ -303,7 +303,11 @@ $('postForm').onsubmit=async e=>{
     if(!media)throw Error('हर media item की file चुनें।');
    }
 
-   if(kind==='photo'&&!prompt)throw Error('हर Photo का Prompt लिखें।');
+  if((kind==='photo'||kind==='video_upload')&&!prompt){
+ throw Error(kind==='photo'
+  ?'हर Photo का Prompt लिखें।'
+  :'Video का Prompt लिखें।');
+}
 
    const row={
     post_id:postId,
