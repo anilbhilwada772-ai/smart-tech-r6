@@ -446,7 +446,69 @@ async function loadSuggestedPosts(currentId){
    card.appendChild(row);
   }
  }
- else if(item.item_type==='video_upload'){
+
+else if(item.item_type==='video_upload'){
+
+  const video=document.createElement('video');
+  video.src=item.media_url;
+  video.controls=true;
+  video.preload='metadata';
+  card.appendChild(video);
+
+  if(item.prompt){
+
+   addText(card,'h3','🎬 Video Prompt');
+
+   addText(card,'div',item.prompt,'prompt');
+
+   const row=document.createElement('div');
+   row.style.marginTop='12px';
+   row.style.display='flex';
+   row.style.flexWrap='wrap';
+   row.style.gap='10px';
+
+   // Copy Prompt Button
+   const copyBtn=document.createElement('button');
+   copyBtn.textContent='📋 Copy Prompt';
+
+   const status=document.createElement('span');
+   status.className='copy-status';
+
+   copyBtn.onclick=()=>copyPrompt(item.prompt,status);
+
+   // Original Google Flow Button
+   const flowBtn=document.createElement('button');
+
+   flowBtn.innerHTML=`
+     <img
+       src="https://labs.google/flow/about/hero/wordmark.svg"
+       alt="Google Flow"
+       style="width:65px;height:28px;object-fit:contain;background:white;border-radius:4px;padding:2px;"
+     >
+     <span>Open Flow AI</span>
+   `;
+
+   flowBtn.style.background='#1769e0';
+   flowBtn.style.color='white';
+   flowBtn.style.display='inline-flex';
+   flowBtn.style.alignItems='center';
+   flowBtn.style.justifyContent='center';
+   flowBtn.style.gap='9px';
+   flowBtn.style.padding='10px 14px';
+
+   flowBtn.onclick=()=>{
+     window.open(
+       'https://labs.google/fx/tools/flow',
+       '_blank',
+       'noopener,noreferrer'
+     );
+   };
+
+   row.append(copyBtn,flowBtn,status);
+   card.appendChild(row);
+  }
+}
+
   const video=document.createElement('video');
   video.src=item.media_url;
   video.controls=true;
