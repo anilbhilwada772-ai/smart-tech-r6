@@ -331,7 +331,32 @@ function createPagination() {
 
   pagination.append(prevBtn, info, nextBtn);
 }
+function updatePageUrl() {
+  const url = new URL(window.location.href);
 
+  if (currentPage === 0) {
+    url.searchParams.delete('page');
+  } else {
+    url.searchParams.set('page', currentPage + 1);
+  }
+
+  history.pushState(
+    { page: currentPage + 1 },
+    '',
+    url
+  );
+}
+
+window.addEventListener('popstate', () => {
+  const params = new URLSearchParams(window.location.search);
+
+  currentPage = Math.max(
+    0,
+    (parseInt(params.get('page'), 10) || 1) - 1
+  );
+
+  loadGalleryPosts();
+});
 // Search for Latest AI Photo Prompts
 if (searchInput) {
   searchInput.addEventListener('input', () => {
