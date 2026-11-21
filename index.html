@@ -168,7 +168,12 @@ const gallery = document.getElementById('galleryPosts');
 const searchInput = document.getElementById('searchInput');
 
 const POSTS_PER_PAGE = 6;
-let currentPage = 0;
+const pageParams = new URLSearchParams(window.location.search);
+
+let currentPage = Math.max(
+  0,
+  (parseInt(pageParams.get('page'), 10) || 1) - 1
+);
 let totalPosts = 0;
 let isLoading = false;
 let searchText = '';
