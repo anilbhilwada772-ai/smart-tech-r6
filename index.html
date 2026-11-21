@@ -308,22 +308,26 @@ function createPagination() {
   if (nextBtn.disabled) nextBtn.style.opacity = '0.45';
 
   prevBtn.onclick = () => {
-    if (currentPage > 0) {
-      currentPage--;
-      loadGalleryPosts();
-      document.getElementById('publicGallery')
-        .scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  if (currentPage > 0) {
+    currentPage--;
+    updatePageUrl();
+    loadGalleryPosts();
+
+    document.getElementById('publicGallery')
+      .scrollIntoView({ behavior: 'smooth' });
+  }
+};
 
   nextBtn.onclick = () => {
-    if (currentPage < totalPages - 1) {
-      currentPage++;
-      loadGalleryPosts();
-      document.getElementById('publicGallery')
-        .scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  if (currentPage < totalPages - 1) {
+    currentPage++;
+    updatePageUrl();
+    loadGalleryPosts();
+
+    document.getElementById('publicGallery')
+      .scrollIntoView({ behavior: 'smooth' });
+  }
+};
 
   pagination.append(prevBtn, info, nextBtn);
 }
